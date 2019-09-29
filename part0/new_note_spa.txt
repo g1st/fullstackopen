@@ -1,0 +1,18 @@
+note over browser:
+in spa.js forms default behaviour is prevented,
+instead DOP-API is use to get input value and date.
+Then it's saved in notes array.
+input field vleated and notes redrawed with newly created note.
+then sendToServer called.
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+note over server:
+server adds new note and date to notes array
+end note
+server-->browser: Responds with 201 status Created. {message: 'note created'}
+note over browser:
+browser console logs server's response text {message: 'note created'}
+end note
+
+

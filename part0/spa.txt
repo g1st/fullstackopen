@@ -1,0 +1,18 @@
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+server-->browser: HTML
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/styles.css
+server-->browser: main.css
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa.js
+server-->browser: spa.js
+note over browser:
+browser starts executing spa.js
+end note
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+
+note over browser:
+browser executes the event handler
+onreadystatechange method execute redeawNotes()
+current notes are removed and nre ones added
+end note
