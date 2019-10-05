@@ -1,0 +1,15 @@
+h2 {
+  color: green;
+}
+
+.notification {
+  border: 3px solid green;
+  padding: 0.5em;
+  background-color: lightgrey;
+  color: green;
+}
+
+.error {
+  border-color: darkred;
+  color: darkred
+}
