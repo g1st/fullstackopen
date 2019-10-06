@@ -12,3 +12,20 @@ content-type: application/json
   "name": "asa",
   "number": "123"
 }
+
+###
+
+DELETE https://salty-savannah-63825.herokuapp.com/api/persons/4
+
+###
+
+GET https://salty-savannah-63825.herokuapp.com/api/persons
+
+###
+POST https://salty-savannah-63825.herokuapp.com/api/persons
+content-type: application/json
+
+{
+  "name": "test",
+  "number": "123"
+}
