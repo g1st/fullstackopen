@@ -16,7 +16,7 @@ const App = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/persons').then(res => {
+    axios.get('/api/persons').then(res => {
       setPersons(res.data);
     });
   }, []);
@@ -55,7 +55,7 @@ const App = () => {
       phonebookService
         .addPerson(newPerson)
         .then(() => {
-          axios.get('http://localhost:3001/api/persons').then(res => {
+          axios.get('/api/persons').then(res => {
             setPersons(res.data);
           });
           setMessage(`${newName} has been added`);
