@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "rm -rf build && cd ../part2/part_d/ && npm run build --prod && cp -r build ../../part3",
+    "logs:prop": "heroku logs --tail"
   },
   "author": "",
   "license": "ISC",
