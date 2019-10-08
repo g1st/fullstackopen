@@ -1,16 +1,40 @@
-DELETE http://localhost:3001/api/persons/4
+DELETE http://localhost:3001/api/persons/5d9b89a90e792e3aada606a4
 
 ###
 
 GET http://localhost:3001/api/persons
 
 ###
+
+GET http://localhost:3001/api/persons/5d9a3f08c525ad6600de92a3
+###
+
+PUT http://localhost:3001/api/persons/5d9a3f08c525ad6600de92a3
+content-type: application/json
+
+{
+  "name": "johnny bravo",
+  "number": "1223"
+}
+###
+
+GET http://localhost:3001/api/persons/123
+
+###
+
+GET http://localhost:3001/unknown/endpoint
+
+###
+
+GET http://localhost:3001/info
+
+###
 POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-  "name": "asa",
-  "number": "123"
+  "name": "Arto Hellaas",
+  "number": "040-123456"
 }
 
 ###
