@@ -45,7 +45,11 @@ const App = () => {
             setNewName('');
             setPhoneNumber('');
           })
-          .catch(() => {
+          .catch(e => {
+            const err = e.response.data;
+            if (err) {
+              return setError(err.error.message);
+            }
             setError(
               `Information of ${newPerson.name} has already been removed from server`
             );
@@ -62,7 +66,13 @@ const App = () => {
           setNewName('');
           setPhoneNumber('');
         })
-        .catch(() => alert(`${newPerson.name} is already in phonebook.`));
+        .catch(e => {
+          const err = e.response.data;
+          if (err) {
+            return setError(err.error.message);
+          }
+          alert(`${newPerson.name} is already in phonebook.`);
+        });
     }
   };
 

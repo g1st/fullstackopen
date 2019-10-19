@@ -45,9 +45,10 @@ app.get('/api/persons/:id', (req, res, next) => {
   const { id } = req.params;
 
   Person.findById(id)
-    .then(person => {
-      if (person) {
-        res.json(person.toJSON());
+    .then(person => person.toJSON())
+    .then(formattedPerson => {
+      if (formattedPerson) {
+        res.json(formattedPerson);
       } else {
         res.status(404).end();
       }
@@ -59,10 +60,10 @@ app.delete('/api/persons/:id', (req, res, next) => {
   const { id } = req.params;
 
   Person.findByIdAndRemove(id)
-    .then(data => {
-      console.log(data);
-      if (data) {
-        res.status(204).json(data.toJSON());
+    .then(data => data.toJSON())
+    .then(formattedData => {
+      if (formattedData) {
+        res.status(204).json(formattedData);
       } else {
         res.status(404).end();
       }
@@ -70,31 +71,38 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const { name, number } = req.body;
-
-  let data;
+  console.log('hi');
   Person.find({}).then(phonebook => {
     data = phonebook.map(p => p.toJSON());
     // later will be validated properly
-    if (!name) {
-      return res.status(404).json({ error: 'name must be provided' });
-    }
+    // if (!name) {
+    //   return res.status(404).json({ error: 'name must be provided' });
+    // }
 
-    if (!number) {
-      return res.status(404).json({ error: 'number must be provided' });
-    }
+    // if (!number) {
+    //   return res.status(404).json({ error: 'number must be provided' });
+    // }
 
-    if (data.find(p => p.name === name)) {
-      return res.status(404).json({ error: 'name must be unique' });
-    }
+    // if (data.find(p => p.name === name)) {
+    //   return res.status(404).json({ error: 'name must be unique' });
+    // }
 
     const person = new Person({
       name,
       number
     });
 
-    person.save().then(data => res.json(data));
+    person
+      .save()
+      .then(data => {
+        // console.log(data);
+        res.json(data);
+      })
+      .catch(err => {
+        next(err);
+      });
   });
 });
 
@@ -102,11 +110,15 @@ app.put('/api/persons/:id', (req, res, next) => {
   const { id } = req.params;
   const { name, number } = req.body;
 
-  Person.findByIdAndUpdate(id, { name, number })
-    .then(data => {
-      console.log(data);
-      if (data) {
-        res.status(201).json(data.toJSON());
+  Person.findByIdAndUpdate(
+    id,
+    { name, number },
+    { runValidators: true, context: 'query' }
+  )
+    .then(data => data.toJSON())
+    .then(formattedData => {
+      if (formattedData) {
+        res.status(201).json(formattedData);
       } else {
         res.status(404).end();
       }
@@ -120,6 +132,19 @@ const unknownEndpoint = (req, res) => {
 
 app.use(unknownEndpoint);
 
+const schemaValidationErrorHandler = (err, req, res, next) => {
+  // console.error(err);
+  const { errors } = err;
+  // console.log(errors);
+  if (errors.hasOwnProperty('name')) {
+    return res.status(400).json({ error: errors.name });
+  }
+  if (errors.hasOwnProperty('number')) {
+    return res.status(400).json({ error: errors.number });
+  }
+  next(err);
+};
+
 const errorHandler = (err, req, res, next) => {
   console.error(err);
   if (err.name === 'CastError' && err.kind === 'ObjectId') {
@@ -128,6 +153,7 @@ const errorHandler = (err, req, res, next) => {
   next(err);
 };
 
+app.use(schemaValidationErrorHandler);
 app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`app listening on port ${PORT}`));

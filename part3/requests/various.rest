@@ -6,7 +6,7 @@ GET http://localhost:3001/api/persons
 
 ###
 
-GET http://localhost:3001/api/persons/5d9a3f08c525ad6600de92a3
+GET http://localhost:3001/api/persons/5d9a3f08c525ad6600de92aa
 ###
 
 PUT http://localhost:3001/api/persons/5d9a3f08c525ad6600de92a3
@@ -14,7 +14,8 @@ content-type: application/json
 
 {
   "name": "johnny bravo",
-  "number": "1223"
+  "number": "1223",
+  "number": "321"
 }
 ###
 
@@ -33,13 +34,13 @@ POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-  "name": "Arto Hellaas",
-  "number": "040-123456"
+  "name": "Arta",
+  "number": "040-1234536321"
 }
 
 ###
 
-DELETE https://salty-savannah-63825.herokuapp.com/api/persons/4
+DELETE https://salty-savannah-63825.herokuapp.com/api/persons/5d9e2951ab989b000440e2e0
 
 ###
 
