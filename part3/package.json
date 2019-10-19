@@ -9,7 +9,8 @@
     "start": "node index.js",
     "build:ui": "rm -rf build && cd ../part2/part_d/ && npm run build --prod && cp -r build ../../part3",
     "dev": "npm run build:ui && npm run watch",
-    "logs:prop": "heroku logs --tail"
+    "logs:prop": "heroku logs --tail",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +22,7 @@
     "morgan": "^1.9.1"
   },
   "devDependencies": {
+    "eslint": "^6.5.1",
     "nodemon": "^1.19.3"
   }
 }

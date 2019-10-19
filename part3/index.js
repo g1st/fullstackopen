@@ -6,7 +6,7 @@ const PORT = process.env.PORT;
 
 const app = express();
 
-morgan.token('body', (req, res) => {
+morgan.token('body', req => {
   return JSON.stringify(req.body);
 });
 
@@ -74,21 +74,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 app.post('/api/persons', (req, res, next) => {
   const { name, number } = req.body;
   console.log('hi');
-  Person.find({}).then(phonebook => {
-    data = phonebook.map(p => p.toJSON());
-    // later will be validated properly
-    // if (!name) {
-    //   return res.status(404).json({ error: 'name must be provided' });
-    // }
-
-    // if (!number) {
-    //   return res.status(404).json({ error: 'number must be provided' });
-    // }
-
-    // if (data.find(p => p.name === name)) {
-    //   return res.status(404).json({ error: 'name must be unique' });
-    // }
-
+  Person.find({}).then(() => {
     const person = new Person({
       name,
       number
@@ -136,10 +122,12 @@ const schemaValidationErrorHandler = (err, req, res, next) => {
   // console.error(err);
   const { errors } = err;
   // console.log(errors);
-  if (errors.hasOwnProperty('name')) {
+  const hasNameError = Object.prototype.hasOwnProperty.call(errors, 'name');
+  const hasNumberError = Object.prototype.hasOwnProperty.call(errors, 'number');
+  if (hasNameError) {
     return res.status(400).json({ error: errors.name });
   }
-  if (errors.hasOwnProperty('number')) {
+  if (hasNumberError) {
     return res.status(400).json({ error: errors.number });
   }
   next(err);
