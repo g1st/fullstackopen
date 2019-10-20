@@ -14,8 +14,7 @@ content-type: application/json
 
 {
   "name": "johnny bravo",
-  "number": "1223",
-  "number": "321"
+  "number": "1223111121"
 }
 ###
 
