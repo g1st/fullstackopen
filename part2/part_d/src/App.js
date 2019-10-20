@@ -58,10 +58,8 @@ const App = () => {
     } else {
       phonebookService
         .addPerson(newPerson)
-        .then(() => {
-          axios.get('/api/persons').then(res => {
-            setPersons(res.data);
-          });
+        .then(data => {
+          setPersons(persons.concat(data));
           setMessage(`${newName} has been added`);
           setNewName('');
           setPhoneNumber('');
@@ -95,7 +93,6 @@ const App = () => {
 
   const personsData = () => {
     const regExp = new RegExp(searchTerm, 'i');
-
     const personsToDisplay = persons.filter(person =>
       person.name.match(regExp)
     );
