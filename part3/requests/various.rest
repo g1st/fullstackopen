@@ -1,20 +1,19 @@
-DELETE http://localhost:3001/api/persons/5d9b89a90e792e3aada606a4
-
+DELETE http://localhost:3001/api/persons/5dc6f0e0409cc229867992e3
 ###
 
 GET http://localhost:3001/api/persons
 
 ###
 
-GET http://localhost:3001/api/persons/5d9a3f08c525ad6600de92aa
+GET http://localhost:3001/api/persons/5d9b88b1385967395a5cfed3
 ###
 
-PUT http://localhost:3001/api/persons/5d9a3f08c525ad6600de92a3
+PUT http://localhost:3001/api/persons/5d9b88b1385967395a5cfed3
 content-type: application/json
 
 {
-  "name": "johnny bravo",
-  "number": "1223111121"
+  "name": "Arto Hellas",
+  "number": "040-12345678"
 }
 ###
 
@@ -33,13 +32,21 @@ POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-  "name": "Arta",
-  "number": "040-1234536321"
+  "name": "Artzaza2",
+  "number": "040-1123453632112"
+}
+
+###
+POST http://localhost:3001/api/persons
+content-type: application/json
+
+{
+  "name": "Johnny"
 }
 
 ###
 
-DELETE https://salty-savannah-63825.herokuapp.com/api/persons/5d9e2951ab989b000440e2e0
+DELETE https://salty-savannah-63825.herokuapp.com/api/persons/5db0ac597e2c49000467ef2c
 
 ###
 
@@ -51,5 +58,5 @@ content-type: application/json
 
 {
   "name": "test",
-  "number": "123"
+  "number": "123123123"
 }

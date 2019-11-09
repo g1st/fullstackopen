@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "nodemon index.js",
-    "start": "node index.js",
+    "watch": "cross-env NODE_ENV=development nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
     "build:ui": "rm -rf build && cd ../part2/part_d/ && npm run build --prod && cp -r build ../../part3",
     "dev": "npm run build:ui && npm run watch",
     "logs:prop": "heroku logs --tail",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +22,10 @@
     "morgan": "^1.9.1"
   },
   "devDependencies": {
+    "cross-env": "^6.0.3",
     "eslint": "^6.5.1",
-    "nodemon": "^1.19.3"
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.3",
+    "supertest": "^4.0.2"
   }
 }

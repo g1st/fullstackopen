@@ -2,20 +2,27 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const config = require('./utils/config');
-const personController = require('./controllers/persons');
-const infoController = require('./controllers/info');
 const middleware = require('./utils/middleware');
+const routes = require('./routes');
+const logger = require('./utils/logger');
 
 const app = express();
 const url = config.MONGODB_URI;
 
+logger.info('connecting to', config.MONGODB_URI);
+
 mongoose
-  .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+  })
   .then(() => {
-    console.log('connected to MongoDB');
+    logger.info('connected to MongoDB');
   })
   .catch(error => {
-    console.log('error connection to MongoDB:', error.message);
+    logger.error('error connection to MongoDB:', error.message);
   });
 
 morgan.token('body', req => {
@@ -40,8 +47,7 @@ app.use(express.static('build'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use('/api/persons', personController);
-app.use('/info', infoController);
+app.use('/', middleware.requestLogger, routes);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.schemaValidationErrorHandler);
