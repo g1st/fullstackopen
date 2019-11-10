@@ -11,3 +11,24 @@ content-type: application/json
   "url": "Test URL",
   "likes": 123
 }
+###
+
+POST http://localhost:3003/api/blogs HTTP/1.1
+content-type: application/json
+
+{
+  "author": "Test Author",
+  "likes": 123,
+  "url": "any"
+}
+###
+
+PATCH http://localhost:3003/api/blogs/5dc84f418838e634f5abb530 HTTP/1.1
+        ?author=abc
+        &likes=1
+
+###
+GET http://localhost:3003/api/blogs/5a422a851b54a676234d17f7 HTTP/1.1
+
+###
+DELETE http://localhost:3003/api/blogs/5dc84fe1c657053613c81e0b HTTP/1.1

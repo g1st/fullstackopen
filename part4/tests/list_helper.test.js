@@ -1,58 +1,10 @@
+const supertest = require('supertest');
+const mongoose = require('mongoose');
+const app = require('../app');
 const list_helper = require('../utils/list_helper');
-
-const blogs = [
-  {
-    _id: '5a422a851b54a676234d17f7',
-    title: 'React patterns',
-    author: 'Michael Chan',
-    url: 'https://reactpatterns.com/',
-    likes: 7,
-    __v: 0
-  },
-  {
-    _id: '5a422aa71b54a676234d17f8',
-    title: 'Go To Statement Considered Harmful',
-    author: 'Edsger W. Dijkstra',
-    url:
-      'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-    likes: 5,
-    __v: 0
-  },
-  {
-    _id: '5a422b3a1b54a676234d17f9',
-    title: 'Canonical string reduction',
-    author: 'Edsger W. Dijkstra',
-    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
-    likes: 12,
-    __v: 0
-  },
-  {
-    _id: '5a422b891b54a676234d17fa',
-    title: 'First class tests',
-    author: 'Robert C. Martin',
-    url:
-      'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-    likes: 10,
-    __v: 0
-  },
-  {
-    _id: '5a422ba71b54a676234d17fb',
-    title: 'TDD harms architecture',
-    author: 'Robert C. Martin',
-    url:
-      'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
-    likes: 0,
-    __v: 0
-  },
-  {
-    _id: '5a422bc61b54a676234d17fc',
-    title: 'Type wars',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
-    likes: 2,
-    __v: 0
-  }
-];
+const { initialBlogs, blogsInDb } = require('./test_helper');
+const Blog = require('../modules/blog');
+const api = supertest(app);
 
 describe('list_helper', () => {
   test('dummy returns one', () => {
@@ -114,7 +66,7 @@ describe('total likes', () => {
 
 describe('favorite blog', () => {
   test('with most likes', () => {
-    const result = list_helper.favoriteBlog(blogs);
+    const result = list_helper.favoriteBlog(initialBlogs);
 
     expect(result).toEqual({
       title: 'Canonical string reduction',
@@ -126,7 +78,7 @@ describe('favorite blog', () => {
 
 describe('most blogs', () => {
   test('author with most blogs', () => {
-    const result = list_helper.mostBlogs(blogs);
+    const result = list_helper.mostBlogs(initialBlogs);
 
     expect(result).toEqual({
       author: 'Robert C. Martin',
@@ -137,11 +89,135 @@ describe('most blogs', () => {
 
 describe('most likes', () => {
   test('author with most likes', () => {
-    const result = list_helper.mostLikes(blogs);
+    const result = list_helper.mostLikes(initialBlogs);
 
     expect(result).toEqual({
       author: 'Edsger W. Dijkstra',
       likes: 17
     });
+  });
+});
+
+describe.only('api tests', () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({});
+
+    const blogs = initialBlogs.map(blog => new Blog(blog));
+    const blogPromises = blogs.map(blog => blog.save());
+
+    await Promise.all(blogPromises);
+  });
+
+  test('returns the correct amount of blog posts in the JSON format', async () => {
+    const response = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response.body.length).toBe(initialBlogs.length);
+  });
+
+  test('unique identifier property of the blog posts is named id (instead of _id)', async () => {
+    const response = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const firstBlog = response.body[0];
+
+    expect(firstBlog.id).toBeDefined();
+  });
+
+  test('POST request to the /api/blogs url successfully creates a new blog post', async () => {
+    const blogsAtStart = await blogsInDb();
+    const newBlog = {
+      title: 'test',
+      author: 'john',
+      url: 'http://test.com',
+      likes: 1
+    };
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await blogsInDb();
+    expect(blogsAtEnd.length).toBe(blogsAtStart.length + 1);
+
+    const addedBlog = await Blog.findOne({ title: 'test' });
+
+    expect(addedBlog.id).toBeDefined();
+    expect(addedBlog.title).toBeDefined();
+    expect(addedBlog.author).toBeDefined();
+    expect(addedBlog.url).toBeDefined();
+    expect(addedBlog.likes).toBeDefined();
+  });
+
+  test('if the likes property is missing from the request, it will default to the value 0', async () => {
+    const newBlog = {
+      title: 'test',
+      author: 'john',
+      url: 'http://test.com'
+    };
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const addedBlog = await Blog.findOne({ title: 'test' });
+    expect(addedBlog.likes).toBe(0);
+  });
+
+  test('POST to /api/blogs if the title and url properties are missing responds with 400', async () => {
+    const newBlogWithoutTitle = {
+      author: 'john',
+      likes: 12,
+      url: 'url'
+    };
+    const newBlogWithoutUrl = {
+      author: 'john',
+      likes: 12,
+      title: 'title'
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlogWithoutTitle)
+      .expect(400);
+
+    await api
+      .post('/api/blogs')
+      .send(newBlogWithoutUrl)
+      .expect(400);
+  });
+
+  test('deletes a post successfully', async () => {
+    const blogsAtStart = await blogsInDb();
+    const firstBlog = blogsAtStart[0];
+
+    await api.delete(`/api/blogs/${firstBlog.id}`).expect(204);
+
+    const blogsAtEnd = await blogsInDb();
+    expect(blogsAtEnd.length).toBe(blogsAtStart.length - 1);
+  });
+
+  test('updates a post successfully', async () => {
+    const blogsAtStart = await blogsInDb();
+    const firstBlogAtStart = blogsAtStart[0];
+
+    await api
+      .patch(`/api/blogs/${firstBlogAtStart.id}?title=test title`)
+      .expect(204);
+
+    const blogsAtEnd = await blogsInDb();
+    const firstBlogAtEnd = blogsAtEnd[0];
+    expect(firstBlogAtStart.title).not.toBe(firstBlogAtEnd.title);
+    expect(firstBlogAtEnd.title).toBe('test title');
+  });
+
+  afterAll(async () => {
+    await mongoose.connection.close();
   });
 });
