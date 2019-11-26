@@ -7,9 +7,15 @@ import LoginForm from "./components/LoginForm";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState("");
-  const [user, setuser] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("user");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      // noteService.setToken(user.token)
+    }
     const getBlogs = async () => {
       try {
         const blo = await getAll();
@@ -28,11 +34,17 @@ const App = () => {
     const config = { username, password };
     try {
       const loggedUser = await loginUser(config);
-      console.log(loggedUser);
-      setuser(loggedUser);
+      window.localStorage.setItem("user", JSON.stringify(loggedUser));
+      // here setting token as well
+      setUser(loggedUser);
     } catch (e) {
       setError(e.message);
     }
+  };
+
+  const handleLogout = () => {
+    window.localStorage.removeItem("user");
+    setUser(null);
   };
 
   return (
@@ -48,7 +60,9 @@ const App = () => {
       )}
       {user && (
         <div>
-          <p>{user.name} logged in</p>
+          <span>{user.name} logged in </span>
+          <button onClick={handleLogout}>logout</button>
+          <hr />
           {blogs.map(blog => (
             <Blog blog={blog} key={blog.title} />
           ))}
