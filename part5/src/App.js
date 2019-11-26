@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { getAll } from "./services/blogs";
-import { loginUser } from "./services/login";
+import { getAll, postNewBlog, setToken } from "./services/blogService";
+import loginService from "./services/loginService";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
+import NewBlogForm from "./components/NewBlogForm";
+import Notification from "./components/Notification";
+import "./index.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [notification, setNotification] = useState(null);
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("user");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
-      // noteService.setToken(user.token)
+      setToken(user.token);
     }
     const getBlogs = async () => {
       try {
@@ -23,27 +30,54 @@ const App = () => {
       } catch (e) {
         console.error(e);
         setError(e.message);
+        setNotification(e.message);
       }
     };
     getBlogs();
   }, []);
 
+  const clearBlogForm = () => {
+    setAuthor("");
+    setTitle("");
+    setUrl("");
+  };
+
   const handleSubmit = async (event, username, password) => {
     event.preventDefault();
-    console.log(`subimitng with username ${username}, password ${password}`);
-    const config = { username, password };
+    const credentials = { username, password };
     try {
-      const loggedUser = await loginUser(config);
+      const loggedUser = await loginService.login(credentials);
       window.localStorage.setItem("user", JSON.stringify(loggedUser));
-      // here setting token as well
+      setToken(loggedUser.token);
       setUser(loggedUser);
     } catch (e) {
-      setError(e.message);
+      setError("Wrong credentials");
+      setNotification("Wrong username or password");
+    }
+  };
+
+  const handleBlogSubmit = async (event, title, author, url) => {
+    event.preventDefault();
+    try {
+      const addedBlog = await postNewBlog({
+        title,
+        author,
+        url,
+        token: user.token
+      });
+      setBlogs(blogs.concat(addedBlog));
+      clearBlogForm();
+      setNotification(`a new blog ${title} added`);
+    } catch (e) {
+      console.error(e);
+      setError("Bad request");
+      setNotification("Bad request");
     }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem("user");
+    setNotification(`user ${user.name} logged out`);
     setUser(null);
   };
 
@@ -52,10 +86,17 @@ const App = () => {
       <header>
         <h1>Bloglist</h1>
       </header>
+      {notification && (
+        <Notification
+          message={notification}
+          setNotification={setNotification}
+          setError={setError}
+          error={error}
+        />
+      )}
       {!user && (
         <>
           <LoginForm handleSubmit={handleSubmit} />
-          {error && <p>{error}</p>}
         </>
       )}
       {user && (
@@ -63,8 +104,17 @@ const App = () => {
           <span>{user.name} logged in </span>
           <button onClick={handleLogout}>logout</button>
           <hr />
-          {blogs.map(blog => (
-            <Blog blog={blog} key={blog.title} />
+          <NewBlogForm
+            handleSubmit={handleBlogSubmit}
+            title={title}
+            setTitle={setTitle}
+            author={author}
+            setAuthor={setAuthor}
+            url={url}
+            setUrl={setUrl}
+          />
+          {blogs.map((blog, id) => (
+            <Blog blog={blog} key={id} />
           ))}
         </div>
       )}

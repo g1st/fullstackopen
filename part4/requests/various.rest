@@ -4,7 +4,7 @@ GET http://localhost:3003/api/blogs HTTP/1.1
 
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJpZCI6IjVkZGFhZjA3OThkZjcyNzFiZDFlMmQ3OSIsImlhdCI6MTU3NDYxMjc2MX0.ls3qKaR0tl-NlLRznvv98Caxv5QKMOj-ixiKku8PQLs
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsImlkIjoiNWRkYzIyY2QzMGY3MTg3ZTE4YTkzMTgwIiwiaWF0IjoxNTc0Nzk2OTYyfQ.eAKEi3A_JE1SToUFAJS7oWgXtbhvJ62VvRgRItw2J_I
 
 {
   "title": "Test titlwdwee",
