@@ -12,6 +12,7 @@ const LoginForm = ({ handleSubmit }) => {
           <label htmlFor="username">username</label>
           <input
             type="text"
+            name="username"
             value={username}
             onChange={({ target }) => setUsername(target.value)}
           />
@@ -20,6 +21,7 @@ const LoginForm = ({ handleSubmit }) => {
           <label htmlFor="password">password</label>
           <input
             type="password"
+            name="password"
             value={password}
             onChange={({ target }) => setPassword(target.value)}
           />
