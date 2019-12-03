@@ -1,45 +1,55 @@
-import React, { useState, useEffect } from "react";
-import { getAll, postNewBlog, setToken } from "./services/blogService";
-import loginService from "./services/loginService";
-import Blog from "./components/Blog";
-import LoginForm from "./components/LoginForm";
-import NewBlogForm from "./components/NewBlogForm";
-import Notification from "./components/Notification";
-import "./index.css";
+import React, { useState, useEffect, useRef } from 'react';
+import { getAll, postNewBlog, setToken } from './services/blogService';
+import loginService from './services/loginService';
+import Blog from './components/Blog';
+import LoginForm from './components/LoginForm';
+import NewBlogForm from './components/NewBlogForm';
+import Notification from './components/Notification';
+import Togglable from './components/Togglable';
+import './index.css';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const blogFormRef = useRef();
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("user");
+    const loggedUserJSON = window.localStorage.getItem('user');
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
       setToken(user.token);
     }
-    const getBlogs = async () => {
-      try {
-        const blo = await getAll();
-        setBlogs(blo);
-      } catch (e) {
-        console.error(e);
-        setError(e.message);
-        setNotification(e.message);
-      }
-    };
+
     getBlogs();
   }, []);
 
+  const getBlogs = async () => {
+    try {
+      const blo = await getAll();
+      const sortedBlogs = blo.sort(
+        (firstBlog, nextBlog) => nextBlog.likes - firstBlog.likes
+      );
+      setBlogs(sortedBlogs);
+    } catch (e) {
+      console.error(e);
+      setError(e.message);
+      setNotification(e.message);
+    }
+  };
+
   const clearBlogForm = () => {
-    setAuthor("");
-    setTitle("");
-    setUrl("");
+    setAuthor('');
+    setTitle('');
+    setUrl('');
   };
 
   const handleSubmit = async (event, username, password) => {
@@ -47,12 +57,12 @@ const App = () => {
     const credentials = { username, password };
     try {
       const loggedUser = await loginService.login(credentials);
-      window.localStorage.setItem("user", JSON.stringify(loggedUser));
+      window.localStorage.setItem('user', JSON.stringify(loggedUser));
       setToken(loggedUser.token);
       setUser(loggedUser);
     } catch (e) {
-      setError("Wrong credentials");
-      setNotification("Wrong username or password");
+      setError('Wrong credentials');
+      setNotification('Wrong username or password');
     }
   };
 
@@ -65,20 +75,35 @@ const App = () => {
         url,
         token: user.token
       });
+      blogFormRef.current.toggleVisibility();
       setBlogs(blogs.concat(addedBlog));
       clearBlogForm();
       setNotification(`a new blog ${title} added`);
     } catch (e) {
       console.error(e);
-      setError("Bad request");
-      setNotification("Bad request");
+      setError('Bad request');
+      setNotification('Bad request');
     }
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem("user");
+    window.localStorage.removeItem('user');
     setNotification(`user ${user.name} logged out`);
     setUser(null);
+  };
+
+  const loginForm = () => {
+    return (
+      <Togglable buttonLabel={'log in'}>
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleSubmit={handleSubmit}
+        />
+      </Togglable>
+    );
   };
 
   return (
@@ -94,30 +119,34 @@ const App = () => {
           error={error}
         />
       )}
-      {!user && (
-        <>
-          <LoginForm handleSubmit={handleSubmit} />
-        </>
-      )}
+      {!user && loginForm()}
       {user && (
         <div>
           <span>{user.name} logged in </span>
           <button onClick={handleLogout}>logout</button>
           <hr />
-          <NewBlogForm
-            handleSubmit={handleBlogSubmit}
-            title={title}
-            setTitle={setTitle}
-            author={author}
-            setAuthor={setAuthor}
-            url={url}
-            setUrl={setUrl}
-          />
-          {blogs.map((blog, id) => (
-            <Blog blog={blog} key={id} />
-          ))}
+          <Togglable buttonLabel="new blog post" ref={blogFormRef}>
+            <NewBlogForm
+              handleSubmit={handleBlogSubmit}
+              title={title}
+              setTitle={setTitle}
+              author={author}
+              setAuthor={setAuthor}
+              url={url}
+              setUrl={setUrl}
+            />
+          </Togglable>
         </div>
       )}
+      {blogs.map((blog, id) => (
+        <Blog
+          blog={blog}
+          key={id + blog.title}
+          blogs={blogs}
+          handleBlogsChange={setBlogs}
+          user={user}
+        />
+      ))}
     </div>
   );
 };

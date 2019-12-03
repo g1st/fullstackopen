@@ -29,7 +29,7 @@ PATCH http://localhost:3003/api/blogs/5ddaa8b70e91d8678eaee9e0 HTTP/1.1
         &likes=1
 
 ###
-GET http://localhost:3003/api/blogs/5dd9442c2064405fe4b4fa61 HTTP/1.1
+GET http://localhost:3003/api/blogs/5a422aa71b54a676234d17f8 HTTP/1.1
 
 ###
 DELETE http://localhost:3003/api/blogs/5ddaa9b4e74c5669c616ddb3 HTTP/1.1
@@ -43,3 +43,12 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhY
 DELETE http://localhost:3003/api/blogs/5ddaa9b4e74c5669c616ddb3 HTTP/1.1
 content-type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJpZCI6IjVkZGFhY2E4N2U0Y2JiNmQyOTJjNGYzYyIsImlhdCI6MTU3NDYxMjE0Mn0.UCZCcT7GCEy6yg_5l67MJ3jRYCLIIxGxxMCRk7qkm7Q
+
+###
+PATCH http://localhost:3003/api/blogs/5ddd7bbe30911e576781d202 HTTP/1.1
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsImlkIjoiNWRkYzIyY2QzMGY3MTg3ZTE4YTkzMTgwIiwiaWF0IjoxNTc0Nzk2OTYyfQ.eAKEi3A_JE1SToUFAJS7oWgXtbhvJ62VvRgRItw2J_I
+
+{
+  "likes": 5
+}

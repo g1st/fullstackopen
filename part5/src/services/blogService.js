@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-const baseUrl = "/api/blogs";
+const baseUrl = '/api/blogs';
 let token = null;
 
 const setToken = newToken => {
@@ -14,10 +14,10 @@ const getAll = () => {
 
 const postNewBlog = data => {
   const request = axios({
-    method: "post",
+    method: 'post',
     baseURL: baseUrl,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: token
     },
     data
@@ -25,4 +25,31 @@ const postNewBlog = data => {
   return request.then(response => response.data);
 };
 
-export { getAll, postNewBlog, setToken };
+const sendLike = (id, likes) => {
+  const request = axios({
+    method: 'patch',
+    url: `${baseUrl}/${id}`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token
+    },
+    data: {
+      likes: likes + 1
+    }
+  });
+  return request.then(response => response.data);
+};
+
+const removeBlog = id => {
+  const request = axios({
+    method: 'delete',
+    url: `${baseUrl}/${id}`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token
+    }
+  });
+  return request.then(response => response.status);
+};
+
+export { getAll, postNewBlog, setToken, sendLike, removeBlog };

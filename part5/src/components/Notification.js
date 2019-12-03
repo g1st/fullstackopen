@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 const Notification = ({ message, setNotification, setError, error }) => {
   useEffect(() => {
@@ -12,7 +12,7 @@ const Notification = ({ message, setNotification, setError, error }) => {
   }, []);
 
   return (
-    <div className={`notification ${error ? "error" : ""}`}>{message}</div>
+    <div className={`notification ${error ? 'error' : ''}`}>{message}</div>
   );
 };
 
