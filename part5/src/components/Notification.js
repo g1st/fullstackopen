@@ -9,7 +9,7 @@ const Notification = ({ message, setNotification, setError, error }) => {
     return () => {
       clearTimeout(timerId);
     };
-  }, []);
+  }, [message, setNotification, setError, error]);
 
   return (
     <div className={`notification ${error ? 'error' : ''}`}>{message}</div>
