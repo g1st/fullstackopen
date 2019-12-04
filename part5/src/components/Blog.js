@@ -73,6 +73,7 @@ const Blog = ({ blog, blogs, handleBlogsChange, user }) => {
       }}
     >
       <p
+        data-testid="more-info"
         onClick={toggleInfo}
         style={{
           cursor: 'pointer'
