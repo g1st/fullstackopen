@@ -52,4 +52,4 @@ const removeBlog = id => {
   return request.then(response => response.status);
 };
 
-export { getAll, postNewBlog, setToken, sendLike, removeBlog };
+export default { getAll, postNewBlog, setToken, sendLike, removeBlog };

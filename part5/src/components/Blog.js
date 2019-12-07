@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { sendLike, removeBlog } from '../services/blogService';
+import blogService from '../services/blogService';
 
 const Blog = ({ blog, blogs, handleBlogsChange, user }) => {
   // idle, sending, success, error
@@ -12,7 +12,7 @@ const Blog = ({ blog, blogs, handleBlogsChange, user }) => {
   const handleLikeClick = async () => {
     setLikeStatus('sending');
     try {
-      await sendLike(blog.id, likes);
+      await blogService.sendLike(blog.id, likes);
       setLikes(likes + 1);
       setLikeStatus('success');
     } catch (e) {
@@ -28,7 +28,7 @@ const Blog = ({ blog, blogs, handleBlogsChange, user }) => {
     if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
       setRemoveBlogStatus('sending');
       try {
-        await removeBlog(blog.id);
+        await blogService.removeBlog(blog.id);
         handleBlogsChange(blogs.filter(x => x.id !== blog.id));
         setRemoveBlogStatus('success');
       } catch (e) {

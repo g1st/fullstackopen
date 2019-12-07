@@ -56,7 +56,7 @@ const App = () => {
     try {
       const loggedUser = await loginService.login(credentials);
       window.localStorage.setItem('user', JSON.stringify(loggedUser));
-      setToken(loggedUser.token);
+      blogService.setToken(loggedUser.token);
       setUser(loggedUser);
     } catch (e) {
       setError('Wrong credentials');
@@ -105,7 +105,7 @@ const App = () => {
   };
 
   return (
-    <div data-testid="app">
+    <div>
       <header>
         <h1>Bloglist</h1>
       </header>
@@ -136,9 +136,9 @@ const App = () => {
           </Togglable>
         </div>
       )}
-      <div className="blogs">
-        {user &&
-          blogs.map((blog, id) => (
+      {user && (
+        <div className="blogs">
+          {blogs.map((blog, id) => (
             <Blog
               blog={blog}
               key={id + blog.title}
@@ -147,7 +147,8 @@ const App = () => {
               user={user}
             />
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
