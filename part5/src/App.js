@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getAll, postNewBlog, setToken } from './services/blogService';
+import blogService from './services/blogService';
 import loginService from './services/loginService';
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
@@ -18,15 +18,13 @@ const App = () => {
   const [url, setUrl] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
   const blogFormRef = useRef();
-
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('user');
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
-      setToken(user.token);
+      blogService.setToken(user.token);
     }
 
     getBlogs();
@@ -34,7 +32,7 @@ const App = () => {
 
   const getBlogs = async () => {
     try {
-      const blo = await getAll();
+      const blo = await blogService.getAll();
       const sortedBlogs = blo.sort(
         (firstBlog, nextBlog) => nextBlog.likes - firstBlog.likes
       );
@@ -69,7 +67,7 @@ const App = () => {
   const handleBlogSubmit = async (event, title, author, url) => {
     event.preventDefault();
     try {
-      const addedBlog = await postNewBlog({
+      const addedBlog = await blogService.postNewBlog({
         title,
         author,
         url,
@@ -107,7 +105,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div data-testid="app">
       <header>
         <h1>Bloglist</h1>
       </header>
@@ -138,15 +136,18 @@ const App = () => {
           </Togglable>
         </div>
       )}
-      {blogs.map((blog, id) => (
-        <Blog
-          blog={blog}
-          key={id + blog.title}
-          blogs={blogs}
-          handleBlogsChange={setBlogs}
-          user={user}
-        />
-      ))}
+      <div className="blogs">
+        {user &&
+          blogs.map((blog, id) => (
+            <Blog
+              blog={blog}
+              key={id + blog.title}
+              blogs={blogs}
+              handleBlogsChange={setBlogs}
+              user={user}
+            />
+          ))}
+      </div>
     </div>
   );
 };
