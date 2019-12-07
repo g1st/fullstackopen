@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { prettyDOM } from '@testing-library/dom';
-import SimpleBlog from './SimpleBlog';
+import SimpleBlog from '../components/SimpleBlog';
 
 describe('<SimpleBlog />', () => {
   let component;
