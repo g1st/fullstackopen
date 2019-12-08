@@ -29,16 +29,6 @@ const App = () => {
     }
   }, []);
 
-  const getBlogs = async () => {
-    try {
-      const blo = await blogService.getAll();
-    } catch (e) {
-      console.error(e);
-      setError(e.message);
-      setNotification(e.message);
-    }
-  };
-
   const clearBlogForm = () => {
     author.reset();
     title.reset();
@@ -62,12 +52,6 @@ const App = () => {
   const handleBlogSubmit = async (event, title, author, url) => {
     event.preventDefault();
     try {
-      // const addedBlog = await blogService.postNewBlog({
-      //   title,
-      //   author,added
-      //   url,
-      //   token: user.token
-      // });
       await blogsService.create({
         title,
         author,
@@ -75,8 +59,6 @@ const App = () => {
         token: user.token
       });
       blogFormRef.current.toggleVisibility();
-      // setBlogs(blogs.concat(blogz));
-      // setBlogs(blogs.concat(addedBlog));
       clearBlogForm();
       setNotification(`a new blog ${title} added`);
     } catch (e) {
