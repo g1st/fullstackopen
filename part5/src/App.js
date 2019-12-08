@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useField, useResource } from './hooks';
 import blogService from './services/blogService';
 import loginService from './services/loginService';
 import Blog from './components/Blog';
@@ -9,15 +10,15 @@ import Togglable from './components/Togglable';
 import './index.css';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const title = useField('text', 'title');
+  const author = useField('text', 'author');
+  const url = useField('text', 'url');
+  const username = useField('text', 'username');
+  const password = useField('password', 'password');
+  const [blogz, blogsService] = useResource('http://localhost:3003/api/blogs');
   const blogFormRef = useRef();
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('user');
@@ -26,17 +27,11 @@ const App = () => {
       setUser(user);
       blogService.setToken(user.token);
     }
-
-    getBlogs();
   }, []);
 
   const getBlogs = async () => {
     try {
       const blo = await blogService.getAll();
-      const sortedBlogs = blo.sort(
-        (firstBlog, nextBlog) => nextBlog.likes - firstBlog.likes
-      );
-      setBlogs(sortedBlogs);
     } catch (e) {
       console.error(e);
       setError(e.message);
@@ -45,9 +40,9 @@ const App = () => {
   };
 
   const clearBlogForm = () => {
-    setAuthor('');
-    setTitle('');
-    setUrl('');
+    author.reset();
+    title.reset();
+    url.reset();
   };
 
   const handleSubmit = async (event, username, password) => {
@@ -67,14 +62,21 @@ const App = () => {
   const handleBlogSubmit = async (event, title, author, url) => {
     event.preventDefault();
     try {
-      const addedBlog = await blogService.postNewBlog({
+      // const addedBlog = await blogService.postNewBlog({
+      //   title,
+      //   author,added
+      //   url,
+      //   token: user.token
+      // });
+      await blogsService.create({
         title,
         author,
         url,
         token: user.token
       });
       blogFormRef.current.toggleVisibility();
-      setBlogs(blogs.concat(addedBlog));
+      // setBlogs(blogs.concat(blogz));
+      // setBlogs(blogs.concat(addedBlog));
       clearBlogForm();
       setNotification(`a new blog ${title} added`);
     } catch (e) {
@@ -96,8 +98,6 @@ const App = () => {
         <LoginForm
           username={username}
           password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
           handleSubmit={handleSubmit}
         />
       </Togglable>
@@ -127,23 +127,20 @@ const App = () => {
             <NewBlogForm
               handleSubmit={handleBlogSubmit}
               title={title}
-              setTitle={setTitle}
               author={author}
-              setAuthor={setAuthor}
               url={url}
-              setUrl={setUrl}
             />
           </Togglable>
         </div>
       )}
       {user && (
         <div className="blogs">
-          {blogs.map((blog, id) => (
+          {blogz.map((blog, id) => (
             <Blog
               blog={blog}
               key={id + blog.title}
-              blogs={blogs}
-              handleBlogsChange={setBlogs}
+              blogs={blogz}
+              handleBlogsChange={blogsService.setResource}
               user={user}
             />
           ))}

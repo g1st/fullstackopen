@@ -1,45 +1,39 @@
 import React from 'react';
 
-const NewBlogForm = ({
-  handleSubmit,
-  title,
-  author,
-  url,
-  setUrl,
-  setAuthor,
-  setTitle
-}) => {
+const NewBlogForm = ({ handleSubmit, title, author, url }) => {
   return (
     <div>
       <h3>create new</h3>
-      <form onSubmit={e => handleSubmit(e, title, author, url)}>
+      <form
+        onSubmit={e => handleSubmit(e, title.value, author.value, url.value)}
+      >
         <div>
           <label htmlFor="username">title:</label>
           <input
-            type="text"
-            name="title"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
+            type={title.type}
+            name={title.name}
+            value={title.value}
+            onChange={title.onChange}
             required
           />
         </div>
         <div>
           <label htmlFor="author">author:</label>
           <input
-            type="text"
-            name="author"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
+            type={author.type}
+            name={author.name}
+            value={author.value}
+            onChange={author.onChange}
             required
           />
         </div>
         <div>
           <label htmlFor="author">url:</label>
           <input
-            type="text"
-            name="url"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
+            type={url.type}
+            name={url.name}
+            value={url.value}
+            onChange={url.onChange}
             required
           />
         </div>
