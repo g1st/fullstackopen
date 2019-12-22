@@ -8,7 +8,7 @@ import notificationReducer from './reducers/notificationReducer';
 const store = createStore(
   combineReducers({
     anecdotes: anecdoteReducer,
-    notifications: notificationReducer
+    notification: notificationReducer
   })
 );
 

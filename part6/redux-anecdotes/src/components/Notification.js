@@ -6,15 +6,10 @@ const Notification = ({ store }) => {
     padding: 10,
     borderWidth: 1
   };
-  return (
-    <div style={style}>
-      <ul>
-        {store.getState().notifications.map(note => (
-          <div key={note}>{note}</div>
-        ))}
-      </ul>
-    </div>
-  );
+
+  const notes = store.getState().notification;
+
+  return notes && <div style={style}>{notes}</div>;
 };
 
 export default Notification;

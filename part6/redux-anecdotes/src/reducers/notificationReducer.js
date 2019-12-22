@@ -1,39 +1,37 @@
-const initialState = ['notification1', 'notification2', 'notification3'];
+const initialState = '';
 
-const reducer = (state = initialState, action) => {
-  console.log('initial notificationReducer state:', state);
+const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'VOTE':
-      const { id } = action.payload;
+    case 'SET_NOTIFICATION':
+      const { content, type } = action.payload;
+      let prefix;
+      if (type === 'ANECDOTE') {
+        prefix = 'you added ';
+      } else {
+        prefix = 'you voted ';
+      }
 
-      return state.map(anecdote => {
-        if (anecdote.id === id) {
-          anecdote.votes++;
-        }
-        return anecdote;
-      });
-    case 'ADD_ANECDOTE':
-      return [...state, action.payload];
+      return `${prefix} '${content}'`;
+    case 'REMOVE_NOTIFICATION':
+      return '';
 
     default:
       return state;
   }
 };
 
-export const addVote = id => {
+export const addNotification = (content, type) => ({
+  type: 'SET_NOTIFICATION',
+  payload: {
+    content,
+    type
+  }
+});
+
+export const removeNotification = () => {
   return {
-    type: 'VOTE',
-    payload: {
-      id
-    }
+    type: 'REMOVE_NOTIFICATION'
   };
 };
 
-export const addAnecdote = content => {
-  return {
-    type: 'ADD_ANECDOTE',
-    payload: {}
-  };
-};
-
-export default reducer;
+export default notificationReducer;
