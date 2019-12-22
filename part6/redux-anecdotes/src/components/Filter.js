@@ -1,14 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { filterFor, clearFilter } from '../reducers/filterReducer';
 
-const Filter = ({ store }) => {
+const Filter = ({ anecdotes, filterFor, clearFilter }) => {
   const handleChange = event => {
     const searchTerm = event.target.value;
-    const anecdotes = store.getState().anecdotes;
     if (searchTerm) {
-      store.dispatch(filterFor(searchTerm, anecdotes));
+      filterFor(searchTerm, anecdotes);
     } else {
-      store.dispatch(clearFilter());
+      clearFilter();
     }
   };
   const style = {
@@ -22,4 +22,13 @@ const Filter = ({ store }) => {
   );
 };
 
-export default Filter;
+const mapStateToProps = state => ({
+  anecdotes: state.anecdotes
+});
+
+const mapDispatchToProps = {
+  filterFor,
+  clearFilter
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);

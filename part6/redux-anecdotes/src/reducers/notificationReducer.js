@@ -1,30 +1,35 @@
-const initialState = '';
+const initialState = {
+  content: '',
+  id: null
+};
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
-      const { content, type } = action.payload;
+      const { content, type, id } = action.payload;
       let prefix;
       if (type === 'ANECDOTE') {
         prefix = 'you added ';
-      } else {
+      }
+      if (type === 'VOTE') {
         prefix = 'you voted ';
       }
 
-      return `${prefix} '${content}'`;
+      return { content: `${prefix} '${content}'`, id };
     case 'REMOVE_NOTIFICATION':
-      return '';
+      return { content: '', id: null };
 
     default:
       return state;
   }
 };
 
-export const addNotification = (content, type) => ({
+export const addNotification = (content, type, id) => ({
   type: 'SET_NOTIFICATION',
   payload: {
     content,
-    type
+    type,
+    id
   }
 });
 

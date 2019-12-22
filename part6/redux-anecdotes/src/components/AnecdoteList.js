@@ -11,14 +11,16 @@ const AnecdoteList = ({
   removeNotification,
   addVote,
   filter,
-  anecdotes
+  anecdotes,
+  timerId
 }) => {
   const vote = (id, anecdote) => {
+    clearTimeout(timerId);
     addVote(id);
-    addNotification(anecdote);
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       removeNotification();
     }, 5000);
+    addNotification(anecdote, 'VOTE', timer);
   };
 
   const isFilterSet = filter.active;
@@ -44,7 +46,8 @@ const AnecdoteList = ({
 
 const mapStateToProps = state => ({
   anecdotes: state.anecdotes,
-  filter: state.filter
+  filter: state.filter,
+  timerId: state.notification.id
 });
 
 const mapDispatchToProps = dispatch => {
@@ -52,8 +55,8 @@ const mapDispatchToProps = dispatch => {
     addVote: id => {
       dispatch(addVote(id));
     },
-    addNotification: anecdote => {
-      dispatch(addNotification(anecdote));
+    addNotification: (anecdote, type, id) => {
+      dispatch(addNotification(anecdote, type, id));
     },
     removeNotification: () => {
       dispatch(removeNotification());

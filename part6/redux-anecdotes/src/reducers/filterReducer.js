@@ -5,7 +5,6 @@ const filterReducer = (state = {}, action) => {
       const filteredAnecdotes = anecdotes.filter(({ content }) =>
         content.includes(searchTerm)
       );
-      console.log(filteredAnecdotes);
       return { anecdotes: filteredAnecdotes, active: true };
     }
     case 'CLEAR_FILTER': {
