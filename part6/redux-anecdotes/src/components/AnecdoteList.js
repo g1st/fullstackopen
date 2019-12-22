@@ -6,18 +6,19 @@ const AnecdoteList = ({ store }) => {
     store.dispatch(addVote(id));
   };
 
-  const anecdotes = store.getState();
-  return anecdotes
-    .sort((el1, el2) => el1.votes < el2.votes)
-    .map(anecdote => (
-      <div key={anecdote.id}>
-        <div>{anecdote.content}</div>
-        <div>
-          has {anecdote.votes}
-          <button onClick={() => vote(anecdote.id)}>vote</button>
-        </div>
+  const anecdotes = store.getState().sort((el1, el2) => {
+    if (el1.votes <= el2.votes) return 1;
+    return -1;
+  });
+  return anecdotes.map(anecdote => (
+    <div key={anecdote.id}>
+      <div>{anecdote.content}</div>
+      <div>
+        has {anecdote.votes}
+        <button onClick={() => vote(anecdote.id)}>vote</button>
       </div>
-    ));
+    </div>
+  ));
 };
 
 export default AnecdoteList;
