@@ -6,7 +6,7 @@ const AnecdoteList = ({ store }) => {
     store.dispatch(addVote(id));
   };
 
-  const anecdotes = store.getState().sort((el1, el2) => {
+  const anecdotes = store.getState().anecdotes.sort((el1, el2) => {
     if (el1.votes <= el2.votes) return 1;
     return -1;
   });
