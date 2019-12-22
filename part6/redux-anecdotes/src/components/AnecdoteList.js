@@ -14,11 +14,17 @@ const AnecdoteList = ({ store }) => {
     }, 5000);
   };
 
+  const isFilterSet = store.getState().filter.active;
   const anecdotes = store.getState().anecdotes.sort((el1, el2) => {
     if (el1.votes <= el2.votes) return 1;
     return -1;
   });
-  return anecdotes.map(anecdote => (
+
+  const displayAnecdotes = isFilterSet
+    ? store.getState().filter.anecdotes
+    : anecdotes;
+
+  return displayAnecdotes.map(anecdote => (
     <div key={anecdote.id}>
       <div>{anecdote.content}</div>
       <div>
