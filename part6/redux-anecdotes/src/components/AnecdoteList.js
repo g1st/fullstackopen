@@ -1,11 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { addVote } from '../reducers/anecdoteReducer';
 import {
   addNotification,
   removeNotification
 } from '../reducers/notificationReducer';
 
-const AnecdoteList = ({ store }) => {
+const AnecdoteList = ({ store, filter, anecdotes }) => {
   const vote = (id, anecdote) => {
     store.dispatch(addVote(id));
     store.dispatch(addNotification(anecdote));
@@ -14,15 +15,13 @@ const AnecdoteList = ({ store }) => {
     }, 5000);
   };
 
-  const isFilterSet = store.getState().filter.active;
-  const anecdotes = store.getState().anecdotes.sort((el1, el2) => {
+  const isFilterSet = filter.active;
+  const sortedAnecdotes = anecdotes.sort((el1, el2) => {
     if (el1.votes <= el2.votes) return 1;
     return -1;
   });
 
-  const displayAnecdotes = isFilterSet
-    ? store.getState().filter.anecdotes
-    : anecdotes;
+  const displayAnecdotes = isFilterSet ? filter.anecdotes : sortedAnecdotes;
 
   return displayAnecdotes.map(anecdote => (
     <div key={anecdote.id}>
@@ -37,4 +36,9 @@ const AnecdoteList = ({ store }) => {
   ));
 };
 
-export default AnecdoteList;
+const mapStateToProps = state => ({
+  anecdotes: state.anecdotes,
+  filter: state.filter
+});
+
+export default connect(mapStateToProps)(AnecdoteList);
