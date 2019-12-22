@@ -6,12 +6,18 @@ import {
   removeNotification
 } from '../reducers/notificationReducer';
 
-const AnecdoteList = ({ store, filter, anecdotes }) => {
+const AnecdoteList = ({
+  addNotification,
+  removeNotification,
+  addVote,
+  filter,
+  anecdotes
+}) => {
   const vote = (id, anecdote) => {
-    store.dispatch(addVote(id));
-    store.dispatch(addNotification(anecdote));
+    addVote(id);
+    addNotification(anecdote);
     setTimeout(() => {
-      store.dispatch(removeNotification());
+      removeNotification();
     }, 5000);
   };
 
@@ -41,4 +47,18 @@ const mapStateToProps = state => ({
   filter: state.filter
 });
 
-export default connect(mapStateToProps)(AnecdoteList);
+const mapDispatchToProps = dispatch => {
+  return {
+    addVote: id => {
+      dispatch(addVote(id));
+    },
+    addNotification: anecdote => {
+      dispatch(addNotification(anecdote));
+    },
+    removeNotification: () => {
+      dispatch(removeNotification());
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteList);
