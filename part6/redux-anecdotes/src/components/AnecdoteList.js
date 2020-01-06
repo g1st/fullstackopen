@@ -10,7 +10,6 @@ const AnecdoteList = ({
   addNotification,
   removeNotification,
   addVote,
-  filter,
   anecdotes,
   timerId
 }) => {
@@ -23,15 +22,7 @@ const AnecdoteList = ({
     addNotification(anecdote, 'VOTE', timer);
   };
 
-  const isFilterSet = filter.active;
-  const sortedAnecdotes = anecdotes.sort((el1, el2) => {
-    if (el1.votes <= el2.votes) return 1;
-    return -1;
-  });
-
-  const displayAnecdotes = isFilterSet ? filter.anecdotes : sortedAnecdotes;
-
-  return displayAnecdotes.map(anecdote => (
+  return anecdotes.map(anecdote => (
     <div key={anecdote.id}>
       <div>{anecdote.content}</div>
       <div>
@@ -44,9 +35,20 @@ const AnecdoteList = ({
   ));
 };
 
+const anecdotesToShow = (anecdotes, filter) => {
+  const isFilterSet = filter.active;
+  const sortedAnecdotes = anecdotes.sort((el1, el2) => {
+    if (el1.votes <= el2.votes) return 1;
+    return -1;
+  });
+
+  const displayAnecdotes = isFilterSet ? filter.anecdotes : sortedAnecdotes;
+
+  return displayAnecdotes;
+};
+
 const mapStateToProps = state => ({
-  anecdotes: state.anecdotes,
-  filter: state.filter,
+  anecdotes: anecdotesToShow(state.anecdotes, state.filter),
   timerId: state.notification.id
 });
 
