@@ -5,6 +5,7 @@ import {
   addNotification,
   removeNotification
 } from '../reducers/notificationReducer';
+import anecdoteService from '../services/anecdotes';
 
 const AnecdoteForm = ({
   addAnecdote,
@@ -12,13 +13,16 @@ const AnecdoteForm = ({
   addNotification,
   removeNotification
 }) => {
-  const submitAnecdote = e => {
+  const submitAnecdote = async e => {
     e.preventDefault();
     clearTimeout(id);
     const timerId = setTimeout(() => {
       removeNotification();
     }, 5000);
-    addAnecdote(e.target.anecdote.value);
+    const newAnecdote = await anecdoteService.createNew(
+      e.target.anecdote.value
+    );
+    addAnecdote(newAnecdote);
     addNotification(e.target.anecdote.value, 'ANECDOTE', timerId);
   };
 
