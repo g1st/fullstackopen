@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  withRouter
+} from 'react-router-dom';
 
 const Menu = () => {
   const padding = {
@@ -7,7 +12,7 @@ const Menu = () => {
   };
   return (
     <div>
-      <Link to="/anecdotes" style={padding}>
+      <Link to="/" style={padding}>
         anecdotes
       </Link>
       <Link to="/create" style={padding}>
@@ -82,6 +87,7 @@ const CreateNew = props => {
       info,
       votes: 0
     });
+    props.history.push('/');
   };
 
   return (
@@ -118,6 +124,8 @@ const CreateNew = props => {
   );
 };
 
+const CreateNewWithRouter = withRouter(CreateNew);
+
 const Anecdote = ({ anecdote, vote }) => {
   return (
     <div>
@@ -133,6 +141,8 @@ const Anecdote = ({ anecdote, vote }) => {
     </div>
   );
 };
+
+const Notification = ({ notification }) => <div>{notification}</div>;
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -157,6 +167,10 @@ const App = () => {
   const addNew = anecdote => {
     anecdote.id = (Math.random() * 10000).toFixed(0);
     setAnecdotes(anecdotes.concat(anecdote));
+    setNotification(`a new anecdote ${anecdote.content} created!`);
+    setTimeout(() => {
+      setNotification('');
+    }, 10000);
   };
 
   const anecdoteById = id => anecdotes.find(a => Number(a.id) === Number(id));
@@ -177,12 +191,16 @@ const App = () => {
       <h1>Software anecdotes</h1>
       <Router>
         <Menu />
+        <Notification notification={notification} />
         <Route
           exact
-          path="/anecdotes"
+          path="/"
           render={() => <AnecdoteList anecdotes={anecdotes} />}
         />
-        <Route path="/create" render={() => <CreateNew addNew={addNew} />} />
+        <Route
+          path="/create"
+          render={() => <CreateNewWithRouter addNew={addNew} />}
+        />
         <Route path="/about" render={() => <About />} />
         <Route
           exact
