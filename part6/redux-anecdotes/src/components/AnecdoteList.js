@@ -5,6 +5,7 @@ import {
   addNotification,
   removeNotification
 } from '../reducers/notificationReducer';
+import anecdoteService from '../services/anecdotes';
 
 const AnecdoteList = ({
   addNotification,
@@ -13,23 +14,22 @@ const AnecdoteList = ({
   anecdotes,
   timerId
 }) => {
-  const vote = (id, anecdote) => {
+  const vote = async anecdote => {
     clearTimeout(timerId);
-    addVote(id);
+    addVote(anecdote.id);
+    await anecdoteService.addVote(anecdote);
     const timer = setTimeout(() => {
       removeNotification();
     }, 5000);
-    addNotification(anecdote, 'VOTE', timer);
+    addNotification(anecdote.content, 'VOTE', timer);
   };
 
-  return anecdotes.map(anecdote => (
-    <div key={anecdote.id}>
+  return anecdotes.map((anecdote, i) => (
+    <div key={i}>
       <div>{anecdote.content}</div>
       <div>
         has {anecdote.votes}
-        <button onClick={() => vote(anecdote.id, anecdote.content)}>
-          vote
-        </button>
+        <button onClick={() => vote(anecdote)}>vote</button>
       </div>
     </div>
   ));

@@ -8,13 +8,12 @@ import Filter from './components/Filter';
 import anecdoteService from './services/anecdotes';
 import { initializeAnecdotes } from './reducers/anecdoteReducer';
 
-const App = ({ store, initializeAnecdotes }) => {
+const App = ({ initializeAnecdotes }) => {
   React.useEffect(() => {
     anecdoteService.getAll().then(anecdotes => {
-      console.log(anecdotes);
       return initializeAnecdotes(anecdotes);
     });
-  }, []);
+  }, [initializeAnecdotes]);
 
   return (
     <div>

@@ -19,11 +19,10 @@ const AnecdoteForm = ({
     const timerId = setTimeout(() => {
       removeNotification();
     }, 5000);
-    const newAnecdote = await anecdoteService.createNew(
-      e.target.anecdote.value
-    );
-    addAnecdote(newAnecdote);
-    addNotification(e.target.anecdote.value, 'ANECDOTE', timerId);
+    const newAnecdote = e.target.anecdote.value;
+    const data = await anecdoteService.createNew(newAnecdote);
+    addAnecdote(data);
+    addNotification(newAnecdote, 'ANECDOTE', timerId);
   };
 
   return (

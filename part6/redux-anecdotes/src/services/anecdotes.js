@@ -9,16 +9,27 @@ const getAll = async () => {
 };
 
 const createNew = async content => {
-  const object = { content, important: false };
+  const object = { content, votes: 0, important: false };
+
   const response = await fetch(baseUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: object
+    body: JSON.stringify(object)
   });
-  const data = response.json();
+  const data = await response.json();
   return data;
 };
 
-export default { getAll, createNew };
+const addVote = async anecdote => {
+  await fetch(baseUrl + `/${anecdote.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(anecdote)
+  });
+};
+
+export default { getAll, createNew, addVote };
