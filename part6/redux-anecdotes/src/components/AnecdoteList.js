@@ -5,7 +5,6 @@ import {
   addNotification,
   removeNotification
 } from '../reducers/notificationReducer';
-import anecdoteService from '../services/anecdotes';
 
 const AnecdoteList = ({
   addNotification,
@@ -16,8 +15,7 @@ const AnecdoteList = ({
 }) => {
   const vote = async anecdote => {
     clearTimeout(timerId);
-    addVote(anecdote.id);
-    await anecdoteService.addVote(anecdote);
+    addVote(anecdote);
     const timer = setTimeout(() => {
       removeNotification();
     }, 5000);
@@ -52,18 +50,10 @@ const mapStateToProps = state => ({
   timerId: state.notification.id
 });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addVote: id => {
-      dispatch(addVote(id));
-    },
-    addNotification: (anecdote, type, id) => {
-      dispatch(addNotification(anecdote, type, id));
-    },
-    removeNotification: () => {
-      dispatch(removeNotification());
-    }
-  };
+const mapDispatchToProps = {
+  addVote,
+  addNotification,
+  removeNotification
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteList);
