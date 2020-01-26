@@ -25,7 +25,9 @@ const AnecdoteList = ({ anecdotes }) => (
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map(anecdote => (
-        <li key={anecdote.id}>{anecdote.content}</li>
+        <li key={anecdote.id}>
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
       ))}
     </ul>
   </div>
@@ -116,6 +118,22 @@ const CreateNew = props => {
   );
 };
 
+const Anecdote = ({ anecdote, vote }) => {
+  return (
+    <div>
+      <h1>{anecdote.content}</h1>
+      <div>has {anecdote.votes} votes</div>
+      <button onClick={() => vote(anecdote.id)}>vote</button>
+      <br />
+      <br />
+      <div>
+        for more info see <a href={anecdote.info}>{anecdote.info}</a>
+      </div>
+      <br />
+    </div>
+  );
+};
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -141,7 +159,7 @@ const App = () => {
     setAnecdotes(anecdotes.concat(anecdote));
   };
 
-  const anecdoteById = id => anecdotes.find(a => a.id === id);
+  const anecdoteById = id => anecdotes.find(a => Number(a.id) === Number(id));
 
   const vote = id => {
     const anecdote = anecdoteById(id);
@@ -166,6 +184,13 @@ const App = () => {
         />
         <Route path="/create" render={() => <CreateNew addNew={addNew} />} />
         <Route path="/about" render={() => <About />} />
+        <Route
+          exact
+          path="/anecdotes/:id"
+          render={({ match }) => (
+            <Anecdote anecdote={anecdoteById(match.params.id)} vote={vote} />
+          )}
+        />
       </Router>
       <Footer />
     </div>
