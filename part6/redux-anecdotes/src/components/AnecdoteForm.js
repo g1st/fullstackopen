@@ -1,26 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addAnecdote } from '../reducers/anecdoteReducer';
-import {
-  addNotification,
-  removeNotification
-} from '../reducers/notificationReducer';
+import { setNotification } from '../reducers/notificationReducer';
 
-const AnecdoteForm = ({
-  addAnecdote,
-  id,
-  addNotification,
-  removeNotification
-}) => {
+const AnecdoteForm = ({ addAnecdote, timerId, setNotification }) => {
   const submitAnecdote = async e => {
     e.preventDefault();
-    clearTimeout(id);
-    const timerId = setTimeout(() => {
-      removeNotification();
-    }, 5000);
     const newAnecdote = e.target.anecdote.value;
     addAnecdote(newAnecdote);
-    addNotification(newAnecdote, 'ANECDOTE', timerId);
+    setNotification(`you added ${newAnecdote}`, 5, timerId);
   };
 
   return (
@@ -37,13 +25,12 @@ const AnecdoteForm = ({
 };
 
 const mapStateToProps = state => ({
-  id: state.notification.id
+  timerId: state.notification.id
 });
 
 const mapDispatchToProps = {
   addAnecdote,
-  addNotification,
-  removeNotification
+  setNotification
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteForm);

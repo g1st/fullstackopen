@@ -1,25 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addVote } from '../reducers/anecdoteReducer';
-import {
-  addNotification,
-  removeNotification
-} from '../reducers/notificationReducer';
+import { setNotification } from '../reducers/notificationReducer';
 
-const AnecdoteList = ({
-  addNotification,
-  removeNotification,
-  addVote,
-  anecdotes,
-  timerId
-}) => {
+const AnecdoteList = ({ setNotification, addVote, anecdotes, timerId }) => {
   const vote = async anecdote => {
-    clearTimeout(timerId);
     addVote(anecdote);
-    const timer = setTimeout(() => {
-      removeNotification();
-    }, 5000);
-    addNotification(anecdote.content, 'VOTE', timer);
+    setNotification(`you voted ${anecdote.content}`, 5, timerId);
   };
 
   return anecdotes.map((anecdote, i) => (
@@ -52,8 +39,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   addVote,
-  addNotification,
-  removeNotification
+  setNotification
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteList);
