@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 
 import blogService from '../services/blogService';
+import { setNotification } from '../store/actions';
 
-const Blog = ({ blog, blogs, handleBlogsChange, user }) => {
+const Blog = ({
+  blog,
+  blogs,
+  handleBlogsChange,
+  user,
+  timerId,
+  setNotification
+}) => {
   // idle, sending, success, error
   const [likeStatus, setLikeStatus] = useState('idle');
   const [removeBlogStatus, setRemoveBlogStatus] = useState('idle');
@@ -31,6 +40,7 @@ const Blog = ({ blog, blogs, handleBlogsChange, user }) => {
         await blogService.removeBlog(blog.id);
         handleBlogsChange(blogs.filter(x => x.id !== blog.id));
         setRemoveBlogStatus('success');
+        setNotification(`${blog.title} REMOVED`, 'error', timerId);
       } catch (e) {
         if (e.message && e.message.includes('401')) {
           alert('You are unauthorized to remove this message');
@@ -50,8 +60,8 @@ const Blog = ({ blog, blogs, handleBlogsChange, user }) => {
           like
         </button>
       </p>
-      <p>added by {blog.user[0].name}</p>
-      {user && blog.user[0].id === user.id ? (
+      <p>added by {blog.user.length > 0 && blog.user[0].name}</p>
+      {blog.user.length > 0 && blog.user[0].id === user.id ? (
         <button
           onClick={handleRemove}
           disabled={removeBlogStatus === 'sending'}
@@ -86,4 +96,8 @@ const Blog = ({ blog, blogs, handleBlogsChange, user }) => {
   );
 };
 
-export default Blog;
+const mapStateToProps = state => ({
+  timerId: state.notification.id
+});
+
+export default connect(mapStateToProps, { setNotification })(Blog);

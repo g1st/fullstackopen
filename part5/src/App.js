@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
 import { useField, useResource } from './hooks';
 import blogService from './services/blogService';
 import loginService from './services/loginService';
@@ -8,11 +9,11 @@ import NewBlogForm from './components/NewBlogForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import './index.css';
+import { setNotification } from './store/actions';
 
-const App = () => {
+const App = ({ setNotification, timerId }) => {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState(null);
   const title = useField('text', 'title');
   const author = useField('text', 'author');
   const url = useField('text', 'url');
@@ -40,12 +41,14 @@ const App = () => {
     const credentials = { username, password };
     try {
       const loggedUser = await loginService.login(credentials);
+      console.log(loggedUser);
       window.localStorage.setItem('user', JSON.stringify(loggedUser));
       blogService.setToken(loggedUser.token);
       setUser(loggedUser);
+      setNotification(`Welcome back ${loggedUser.name}!`, '', timerId);
     } catch (e) {
       setError('Wrong credentials');
-      setNotification('Wrong username or password');
+      setNotification('Wrong username or password', 'error', timerId);
     }
   };
 
@@ -60,17 +63,17 @@ const App = () => {
       });
       blogFormRef.current.toggleVisibility();
       clearBlogForm();
-      setNotification(`a new blog ${title} added`);
+      setNotification(`a new blog ${title} added`, '', timerId);
     } catch (e) {
       console.error(e);
       setError('Bad request');
-      setNotification('Bad request');
+      setNotification('Bad request', 'error', timerId);
     }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem('user');
-    setNotification(`user ${user.name} logged out`);
+    setNotification(`user ${user.name} logged out`, 'error', timerId);
     setUser(null);
   };
 
@@ -91,14 +94,7 @@ const App = () => {
       <header>
         <h1>Bloglist</h1>
       </header>
-      {notification && (
-        <Notification
-          message={notification}
-          setNotification={setNotification}
-          setError={setError}
-          error={error}
-        />
-      )}
+      <Notification setError={setError} error={error} />
       {!user && loginForm()}
       {user && (
         <div>
@@ -132,4 +128,8 @@ const App = () => {
   );
 };
 
-export default App;
+const mapStateToProps = state => ({
+  timerId: state.notification.id
+});
+
+export default connect(mapStateToProps, { setNotification })(App);

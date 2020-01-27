@@ -1,19 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 
-const Notification = ({ message, setNotification, setError, error }) => {
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setNotification(null);
-      setError(null);
-    }, 5000);
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [message, setNotification, setError, error]);
+const Notification = ({ message, type }) =>
+  message && <div className={`notification ${type}`}>{message}</div>;
 
-  return (
-    <div className={`notification ${error ? 'error' : ''}`}>{message}</div>
-  );
-};
+const mapStateToProps = state => ({
+  message: state.notification.content,
+  type: state.notification.type
+});
 
-export default Notification;
+export default connect(mapStateToProps)(Notification);

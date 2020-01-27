@@ -10,7 +10,9 @@
     "dev": "npm run build:ui && npm run watch",
     "logs:prop": "heroku logs --tail",
     "lint": "eslint .",
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "cypress:open": "cypress open",
+    "start:test": "cross-env NODE_ENV=test node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +25,7 @@
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
+    "cypress": "^3.8.3",
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
     "nodemon": "^1.19.3",

@@ -10,6 +10,7 @@ const NewBlogForm = ({ handleSubmit, title, author, url }) => {
         <div>
           <label htmlFor="username">title:</label>
           <input
+            id="title"
             type={title.type}
             name={title.name}
             value={title.value}
@@ -20,6 +21,7 @@ const NewBlogForm = ({ handleSubmit, title, author, url }) => {
         <div>
           <label htmlFor="author">author:</label>
           <input
+            id="author"
             type={author.type}
             name={author.name}
             value={author.value}
@@ -30,6 +32,7 @@ const NewBlogForm = ({ handleSubmit, title, author, url }) => {
         <div>
           <label htmlFor="author">url:</label>
           <input
+            id="url"
             type={url.type}
             name={url.name}
             value={url.value}
@@ -37,7 +40,9 @@ const NewBlogForm = ({ handleSubmit, title, author, url }) => {
             required
           />
         </div>
-        <button type="submit">create</button>
+        <button id="create" type="submit">
+          create
+        </button>
       </form>
     </div>
   );

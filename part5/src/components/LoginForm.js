@@ -8,6 +8,7 @@ const LoginForm = ({ username, password, handleSubmit }) => (
       <div>
         <label htmlFor="username">username</label>
         <input
+          id="username"
           type={username.type}
           name={username.name}
           value={username.value}
@@ -18,6 +19,7 @@ const LoginForm = ({ username, password, handleSubmit }) => (
       <div>
         <label htmlFor="password">password</label>
         <input
+          id="password"
           type={password.type}
           name={password.name}
           value={password.value}
@@ -25,7 +27,9 @@ const LoginForm = ({ username, password, handleSubmit }) => (
           required
         />
       </div>
-      <button type="submit">log in</button>
+      <button id="login" type="submit">
+        log in
+      </button>
     </form>
   </div>
 );
