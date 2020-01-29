@@ -34,4 +34,9 @@ const removeBlog = id => {
   return request.then(response => response.status);
 };
 
-export default { setToken, sendLike, removeBlog };
+const getAllBlogs = () => {
+  const request = axios(baseUrl);
+  return request.then(response => response.data);
+};
+
+export default { getAllBlogs, setToken, sendLike, removeBlog };

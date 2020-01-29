@@ -1,6 +1,46 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { useField } from '../hooks';
+import { setNotification } from '../store/actions/notificationActions';
+import { addBlog } from '../store/actions/blogActions';
 
-const NewBlogForm = ({ handleSubmit, title, author, url }) => {
+const NewBlogForm = ({ user, setError, addBlog, timerId }) => {
+  const title = useField('text', 'title');
+  const url = useField('text', 'url');
+  const author = useField('text', 'author');
+
+  const clearBlogForm = () => {
+    author.reset();
+    title.reset();
+    url.reset();
+  };
+
+  const handleSubmit = async (event, title, author, url) => {
+    event.preventDefault();
+    try {
+      await addBlog({
+        title,
+        author,
+        url,
+        token: user.token
+      });
+      // ref.current.toggleVisibility();
+
+      // useImperativeHandle(ref, () => {
+      //   return {
+      //     toggleVisibility
+      //   };
+      // });
+
+      clearBlogForm();
+      setNotification(`a new blog ${title} added`, '', timerId);
+    } catch (e) {
+      console.error(e);
+      setError('Bad request');
+      setNotification('Bad request', 'error', timerId);
+    }
+  };
+
   return (
     <div>
       <h3>create new</h3>
@@ -48,4 +88,8 @@ const NewBlogForm = ({ handleSubmit, title, author, url }) => {
   );
 };
 
-export default NewBlogForm;
+const mapStateToProps = state => ({
+  timerId: state.notification.id
+});
+
+export default connect(mapStateToProps, { addBlog })(NewBlogForm);

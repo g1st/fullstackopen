@@ -2,16 +2,10 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import blogService from '../services/blogService';
-import { setNotification } from '../store/actions';
+import { setNotification } from '../store/actions/notificationActions';
+import { removeBlog } from '../store/actions/blogActions';
 
-const Blog = ({
-  blog,
-  blogs,
-  handleBlogsChange,
-  user,
-  timerId,
-  setNotification
-}) => {
+const Blog = ({ blog, removeBlog, user, timerId, setNotification }) => {
   // idle, sending, success, error
   const [likeStatus, setLikeStatus] = useState('idle');
   const [removeBlogStatus, setRemoveBlogStatus] = useState('idle');
@@ -38,7 +32,7 @@ const Blog = ({
       setRemoveBlogStatus('sending');
       try {
         await blogService.removeBlog(blog.id);
-        handleBlogsChange(blogs.filter(x => x.id !== blog.id));
+        removeBlog(blog.id);
         setRemoveBlogStatus('success');
         setNotification(`${blog.title} REMOVED`, 'error', timerId);
       } catch (e) {
@@ -100,4 +94,4 @@ const mapStateToProps = state => ({
   timerId: state.notification.id
 });
 
-export default connect(mapStateToProps, { setNotification })(Blog);
+export default connect(mapStateToProps, { setNotification, removeBlog })(Blog);
