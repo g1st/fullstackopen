@@ -24,13 +24,6 @@ const NewBlogForm = ({ user, setError, addBlog, timerId }) => {
         url,
         token: user.token
       });
-      // ref.current.toggleVisibility();
-
-      // useImperativeHandle(ref, () => {
-      //   return {
-      //     toggleVisibility
-      //   };
-      // });
 
       clearBlogForm();
       setNotification(`a new blog ${title} added`, '', timerId);

@@ -33,11 +33,11 @@ const App = ({ setNotification, timerId, initializeBlogs, blogs }) => {
     const credentials = { username, password };
     try {
       const loggedUser = await loginService.login(credentials);
-      console.log(loggedUser);
       window.localStorage.setItem('user', JSON.stringify(loggedUser));
       blogService.setToken(loggedUser.token);
       setUser(loggedUser);
       setNotification(`Welcome back ${loggedUser.name}!`, '', timerId);
+      if (blogs.length < 1) initializeBlogs();
     } catch (e) {
       setError('Wrong credentials');
       setNotification('Wrong username or password', 'error', timerId);
@@ -75,7 +75,7 @@ const App = ({ setNotification, timerId, initializeBlogs, blogs }) => {
           <button onClick={handleLogout}>logout</button>
           <hr />
           <Togglable buttonLabel="new blog post" ref={blogFormRef}>
-            <NewBlogForm ref={blogFormRef} user={user} setError={setError} />
+            <NewBlogForm user={user} setError={setError} />
           </Togglable>
         </div>
       )}
