@@ -4,7 +4,7 @@ import { useField } from '../hooks';
 import { setNotification } from '../store/actions/notificationActions';
 import { addBlog } from '../store/actions/blogActions';
 
-const NewBlogForm = ({ user, setError, addBlog, timerId }) => {
+const NewBlogForm = ({ user, setNotification, addBlog, timerId }) => {
   const title = useField('text', 'title');
   const url = useField('text', 'url');
   const author = useField('text', 'author');
@@ -28,8 +28,6 @@ const NewBlogForm = ({ user, setError, addBlog, timerId }) => {
       clearBlogForm();
       setNotification(`a new blog ${title} added`, '', timerId);
     } catch (e) {
-      console.error(e);
-      setError('Bad request');
       setNotification('Bad request', 'error', timerId);
     }
   };
@@ -82,7 +80,10 @@ const NewBlogForm = ({ user, setError, addBlog, timerId }) => {
 };
 
 const mapStateToProps = state => ({
-  timerId: state.notification.id
+  timerId: state.notification.id,
+  user: state.user
 });
 
-export default connect(mapStateToProps, { addBlog })(NewBlogForm);
+export default connect(mapStateToProps, { addBlog, setNotification })(
+  NewBlogForm
+);

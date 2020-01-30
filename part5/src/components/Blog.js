@@ -91,7 +91,8 @@ const Blog = ({ blog, removeBlog, user, timerId, setNotification }) => {
 };
 
 const mapStateToProps = state => ({
-  timerId: state.notification.id
+  timerId: state.notification.id,
+  user: state.user
 });
 
 export default connect(mapStateToProps, { setNotification, removeBlog })(Blog);
