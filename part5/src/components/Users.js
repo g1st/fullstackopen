@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import userService from '../services/userService';
 
@@ -28,7 +29,9 @@ const Users = ({ user }) => {
               .sort((a, b) => b.blogs.length - a.blogs.length)
               .map((user, i) => (
                 <tr key={i}>
-                  <td>{user.name}</td>
+                  <td>
+                    <Link to={`/users/${user.id}`}>{user.name}</Link>
+                  </td>
                   <td>{user.blogs.length}</td>
                 </tr>
               ))}

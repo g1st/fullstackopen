@@ -6,6 +6,7 @@ import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import Landing from './components/Landing';
 import Users from './components/Users';
+import User from './components/User';
 import './index.css';
 import { setNotification } from './store/actions/notificationActions';
 import { initializeBlogs } from './store/actions/blogActions';
@@ -70,8 +71,11 @@ const App = ({
         <Route exact path="/">
           <Landing />
         </Route>
-        <Route path="/users">
+        <Route exact path="/users">
           <Users />
+        </Route>
+        <Route path="/users/:id">
+          <User />
         </Route>
       </Router>
     </div>

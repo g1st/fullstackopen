@@ -19,3 +19,7 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3003/api/users HTTP/1.1
+
+###
+
+GET http://localhost:3003/api/users/5e3554ed77c32432d5d0b97d HTTP/1.1
