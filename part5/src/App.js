@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
-import NewBlogForm from './components/NewBlogForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
-import Blogs from './components/Blogs';
+import Landing from './components/Landing';
+import Users from './components/Users';
 import './index.css';
 import { setNotification } from './store/actions/notificationActions';
 import { initializeBlogs } from './store/actions/blogActions';
@@ -18,7 +19,6 @@ const App = ({
   userLoginFromLocalStorage,
   logout
 }) => {
-  const blogFormRef = useRef();
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('user');
     if (loggedUserJSON) {
@@ -44,22 +44,36 @@ const App = ({
 
   return (
     <div>
-      <header>
-        <h1>Bloglist</h1>
-      </header>
-      <Notification />
-      {!user && loginForm()}
-      {user && (
-        <div>
-          <span>{user.name} logged in </span>
-          <button onClick={handleLogout}>logout</button>
-          <hr />
-          <Togglable buttonLabel="new blog post" ref={blogFormRef}>
-            <NewBlogForm />
-          </Togglable>
-        </div>
-      )}
-      {user && <Blogs />}
+      <Router>
+        <header>
+          <h1>Bloglist</h1>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/users">Users</Link>
+              </li>
+            </ul>
+          </nav>
+        </header>
+        <Notification />
+        {!user && loginForm()}
+        {user && (
+          <div>
+            <span>{user.name} logged in </span>
+            <button onClick={handleLogout}>logout</button>
+            <hr />
+          </div>
+        )}
+        <Route exact path="/">
+          <Landing />
+        </Route>
+        <Route path="/users">
+          <Users />
+        </Route>
+      </Router>
     </div>
   );
 };
