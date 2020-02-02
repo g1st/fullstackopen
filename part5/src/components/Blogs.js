@@ -1,12 +1,34 @@
 import React from 'react';
-import Blog from './Blog';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 const Blogs = ({ blogs }) => (
   <div className="blogs">
-    {blogs.map((blog, id) => (
-      <Blog blog={blog} key={id + blog.title} />
-    ))}
+    <ul
+      style={{
+        listStyleType: 'none',
+        margin: 0,
+        padding: 0
+      }}
+    >
+      {blogs.map((blog, id) => (
+        <li key={id + blog.title}>
+          <Link to={`/blogs/${blog.id}`}>
+            <div
+              style={{
+                border: '1px solid lightgrey',
+                margin: '0.25em',
+                padding: '0 1em',
+                userSelect: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              {blog.title}
+            </div>
+          </Link>
+        </li>
+      ))}
+    </ul>
   </div>
 );
 

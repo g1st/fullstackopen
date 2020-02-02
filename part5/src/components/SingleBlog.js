@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
+import { useParams, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import blogService from '../services/blogService';
 import { setNotification } from '../store/actions/notificationActions';
 import { removeBlog } from '../store/actions/blogActions';
 
-const Blog = ({ blog, removeBlog, user, timerId, setNotification }) => {
+const SingleBlog = ({ blogs, removeBlog, user, timerId, setNotification }) => {
   // idle, sending, success, error
   const [likeStatus, setLikeStatus] = useState('idle');
   const [removeBlogStatus, setRemoveBlogStatus] = useState('idle');
-  const [showMore, setShowMore] = useState(false);
-  const [likes, setLikes] = useState(blog.likes);
+  const [likes, setLikes] = useState(0);
+  const { id } = useParams();
 
+  if (!user) {
+    return <Redirect to="/" />;
+  }
+
+  let blog;
+  if (blogs.length > 0) {
+    blog = blogs.filter(blog => blog.id === id)[0];
+  }
   const handleLikeClick = async () => {
     setLikeStatus('sending');
     try {
@@ -21,10 +30,6 @@ const Blog = ({ blog, removeBlog, user, timerId, setNotification }) => {
     } catch (e) {
       setLikeStatus('error');
     }
-  };
-
-  const toggleInfo = () => {
-    setShowMore(!showMore);
   };
 
   const handleRemove = async () => {
@@ -43,11 +48,13 @@ const Blog = ({ blog, removeBlog, user, timerId, setNotification }) => {
       }
     }
   };
-
-  const lengthy = (
+  return user && blog ? (
     <>
       {likeStatus === 'error' ? <p>oops, network error</p> : null}
-      <p>{blog.url}</p>
+      <h1>{blog.title}</h1>
+      <p>
+        <a href={blog.url}>{blog.url}</a>
+      </p>
       <p>
         likes: {likes}{' '}
         <button onClick={handleLikeClick} disabled={likeStatus === 'sending'}>
@@ -65,29 +72,7 @@ const Blog = ({ blog, removeBlog, user, timerId, setNotification }) => {
         </button>
       ) : null}
     </>
-  );
-
-  return (
-    <div
-      style={{
-        border: '1px solid lightgrey',
-        margin: '0.25em',
-        padding: '0 1em',
-        userSelect: 'none'
-      }}
-    >
-      <p
-        data-testid="more-info"
-        onClick={toggleInfo}
-        style={{
-          cursor: 'pointer'
-        }}
-      >
-        {blog.title} {blog.author}
-      </p>
-      {showMore && lengthy}
-    </div>
-  );
+  ) : null;
 };
 
 const mapStateToProps = state => ({
@@ -95,4 +80,6 @@ const mapStateToProps = state => ({
   user: state.user
 });
 
-export default connect(mapStateToProps, { setNotification, removeBlog })(Blog);
+export default connect(mapStateToProps, { setNotification, removeBlog })(
+  SingleBlog
+);

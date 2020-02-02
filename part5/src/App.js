@@ -7,12 +7,14 @@ import Togglable from './components/Togglable';
 import Landing from './components/Landing';
 import Users from './components/Users';
 import User from './components/User';
+import SingleBlog from './components/SingleBlog';
 import './index.css';
 import { setNotification } from './store/actions/notificationActions';
 import { initializeBlogs } from './store/actions/blogActions';
 import { userLoginFromLocalStorage, logout } from './store/actions/userActions';
 
 const App = ({
+  blogs,
   setNotification,
   timerId,
   initializeBlogs,
@@ -77,6 +79,9 @@ const App = ({
         <Route path="/users/:id">
           <User />
         </Route>
+        <Route path="/blogs/:id">
+          <SingleBlog blogs={blogs} />
+        </Route>
       </Router>
     </div>
   );
@@ -84,7 +89,8 @@ const App = ({
 
 const mapStateToProps = state => ({
   timerId: state.notification.id,
-  user: state.user
+  user: state.user,
+  blogs: state.blogs
 });
 
 export default connect(mapStateToProps, {
