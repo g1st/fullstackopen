@@ -42,9 +42,7 @@ const initializeBlogs = () => {
 const sendComment = (id, comment) => {
   return async dispatch => {
     const response = await blogService.sendComment(id, comment);
-    console.log(response);
     const blogs = response.data;
-    console.log(blogs);
     return dispatch({
       type: 'ADD_COMMENT',
       payload: {

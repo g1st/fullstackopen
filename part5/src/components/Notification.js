@@ -11,7 +11,7 @@ const Notification = ({ message, error }) => {
 
 const mapStateToProps = state => ({
   message: state.notification.content,
-  type: state.notification.type
+  error: state.notification.type
 });
 
 export default connect(mapStateToProps)(Notification);
