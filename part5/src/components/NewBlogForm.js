@@ -37,13 +37,14 @@ const NewBlogForm = ({ user, setNotification, addBlog, timerId }) => {
   return (
     <Togglable buttonLabel="new blog post" ref={blogFormRef}>
       <div>
-        <h3>create new</h3>
         <form
           onSubmit={e => handleSubmit(e, title.value, author.value, url.value)}
         >
           <div>
-            <label htmlFor="username">title:</label>
+            <label htmlFor="username" />
             <input
+              className="mb-2 bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
+              placeholder="Title"
               id="title"
               type={title.type}
               name={title.name}
@@ -53,8 +54,10 @@ const NewBlogForm = ({ user, setNotification, addBlog, timerId }) => {
             />
           </div>
           <div>
-            <label htmlFor="author">author:</label>
+            <label htmlFor="author" />
             <input
+              className="mb-2 bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
+              placeholder="Author"
               id="author"
               type={author.type}
               name={author.name}
@@ -64,8 +67,10 @@ const NewBlogForm = ({ user, setNotification, addBlog, timerId }) => {
             />
           </div>
           <div>
-            <label htmlFor="author">url:</label>
+            <label htmlFor="url" />
             <input
+              className="mb-2 bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
+              placeholder="URL"
               id="url"
               type={url.type}
               name={url.name}
@@ -74,7 +79,12 @@ const NewBlogForm = ({ user, setNotification, addBlog, timerId }) => {
               required
             />
           </div>
-          <button id="create" type="submit">
+
+          <button
+            className="mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            id="create"
+            type="submit"
+          >
             create
           </button>
         </form>

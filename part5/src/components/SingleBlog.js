@@ -48,22 +48,28 @@ const SingleBlog = ({ blogs, removeBlog, user, timerId, setNotification }) => {
   return user && blog ? (
     <>
       {likeStatus === 'error' ? <p>oops, network error</p> : null}
-      <h1>{blog.title}</h1>
-      <p>
-        <a href={blog.url}>{blog.url}</a>
-      </p>
-      <p>
+      <h1 className="text-base font-semibold">{blog.title}</h1>
+      <div>
+        <a className="text-base" href={blog.url}>
+          {blog.url}
+        </a>
+      </div>
+      <div className="text-base">
         likes: {likes}{' '}
         <button onClick={handleLikeClick} disabled={likeStatus === 'sending'}>
-          like
+          <span role="img" aria-label="like-button">
+            &#128077;
+          </span>
         </button>
+      </div>
+      <p className="text-base">
+        added by {blog.user.length > 0 && blog.user[0].name}
       </p>
-      <p>added by {blog.user.length > 0 && blog.user[0].name}</p>
       {blog.user.length > 0 && blog.user[0].id === user.id ? (
         <button
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           onClick={handleRemove}
           disabled={removeBlogStatus === 'sending'}
-          style={{ backgroundColor: 'skyblue' }}
         >
           remove
         </button>

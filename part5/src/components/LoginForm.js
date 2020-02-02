@@ -31,11 +31,15 @@ const LoginForm = ({
 
   return (
     <div>
-      <h3>log in to application</h3>
-      <form onSubmit={e => handleSubmit(e, username.value, password.value)}>
-        <div>
-          <label htmlFor="username">username</label>
+      <form
+        className="w-64"
+        onSubmit={e => handleSubmit(e, username.value, password.value)}
+      >
+        <div className="mb-2">
+          <label htmlFor="username" />
           <input
+            className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
+            placeholder="username"
             id="username"
             type={username.type}
             name={username.name}
@@ -44,9 +48,11 @@ const LoginForm = ({
             required
           />
         </div>
-        <div>
-          <label htmlFor="password">password</label>
+        <div className="mb-2">
+          <label htmlFor="password" />
           <input
+            className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
+            placeholder="password"
             id="password"
             type={password.type}
             name={password.name}
@@ -55,7 +61,11 @@ const LoginForm = ({
             required
           />
         </div>
-        <button id="login" type="submit">
+        <button
+          className="mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          id="login"
+          type="submit"
+        >
           log in
         </button>
       </form>

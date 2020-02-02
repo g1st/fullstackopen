@@ -14,7 +14,12 @@ const Login = ({ user, setNotification, timerId, logout }) => {
     user && (
       <div>
         <span>{user.name} logged in </span>
-        <button onClick={handleLogout}>logout</button>
+        <button
+          className="text-blue-500 hover:text-blue-800"
+          onClick={handleLogout}
+        >
+          logout
+        </button>
       </div>
     )
   );

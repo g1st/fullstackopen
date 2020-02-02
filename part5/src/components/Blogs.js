@@ -4,26 +4,12 @@ import { connect } from 'react-redux';
 
 const Blogs = ({ blogs }) => (
   <div className="blogs">
-    <ul
-      style={{
-        listStyleType: 'none',
-        margin: 0,
-        padding: 0
-      }}
-    >
+    <ul>
       {blogs.map((blog, id) => (
         <li key={id + blog.title}>
           <Link to={`/blogs/${blog.id}`}>
-            <div
-              style={{
-                border: '1px solid lightgrey',
-                margin: '0.25em',
-                padding: '0 1em',
-                userSelect: 'none',
-                cursor: 'pointer'
-              }}
-            >
-              {blog.title}
+            <div className="my-2 rounded-full border-solid border-2 border-black-700 hover:bg-red-800">
+              <div className="ml-6 py-2 hover:text-white">{blog.title}</div>
             </div>
           </Link>
         </li>

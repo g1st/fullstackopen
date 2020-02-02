@@ -9,7 +9,7 @@ import Users from './components/Users';
 import User from './components/User';
 import SingleBlog from './components/SingleBlog';
 import Login from './components/Login';
-import './index.css';
+import './styles/index.css';
 import { initializeBlogs } from './store/actions/blogActions';
 import { userLoginFromLocalStorage } from './store/actions/userActions';
 
@@ -32,24 +32,28 @@ const App = ({ blogs, initializeBlogs, user, userLoginFromLocalStorage }) => {
   };
 
   return (
-    <div>
+    <div className="container px-4 py-2 mx-auto">
       <Router>
         <header>
           <nav>
-            <ul className="menu">
-              <li className="menu-item">
-                <Link to="/">Blogs</Link>
+            <ul className="flex">
+              <li className="mr-6">
+                <Link to="/" className="text-blue-500 hover:text-blue-800">
+                  Blogs
+                </Link>
               </li>
-              <li className="menu-item">
-                <Link to="/users">Users</Link>
+              <li className="mr-6">
+                <Link to="/users" className="text-blue-500 hover:text-blue-800">
+                  Users
+                </Link>
               </li>
-              <li className="menu-item">
+              <li className="ml-auto">
                 <Login />
               </li>
             </ul>
           </nav>
           <Notification />
-          <h1>Bloglist</h1>
+          <h1 className="text-2xl text-center">Bloglist</h1>
         </header>
         {!user && loginForm()}
         <Route exact path="/">

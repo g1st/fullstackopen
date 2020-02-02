@@ -19,10 +19,12 @@ const CommentForm = ({ sendComment, id, timerId, setNotification }) => {
 
   return (
     <div>
-      <form onSubmit={e => handleSubmit(e, comment.value)}>
+      <form className="max-w-sm" onSubmit={e => handleSubmit(e, comment.value)}>
         <div>
           <label htmlFor="username" />
           <input
+            className="mb-2 bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
+            placeholder="Your comment..."
             id="comment"
             type={comment.type}
             name={comment.name}
@@ -30,7 +32,11 @@ const CommentForm = ({ sendComment, id, timerId, setNotification }) => {
             onChange={comment.onChange}
             required
           />
-          <button id="comment-submit" type="submit">
+          <button
+            className="mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            id="comment-submit"
+            type="submit"
+          >
             add comment
           </button>
         </div>

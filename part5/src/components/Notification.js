@@ -1,8 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const Notification = ({ message, type }) => {
-  return message && <div className={`notification ${type}`}>{message}</div>;
+const Notification = ({ message, error }) => {
+  return (
+    message && (
+      <div className={error ? 'text-red-500' : 'text-green-500'}>{message}</div>
+    )
+  );
 };
 
 const mapStateToProps = state => ({

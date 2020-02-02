@@ -16,23 +16,22 @@ const Users = ({ user }) => {
   return (
     user && (
       <div>
-        <h2>Users</h2>
-        <table>
+        <table className="table-fixed">
           <thead>
             <tr>
-              <th></th>
-              <th>blogs created</th>
+              <th className="border px-4 py-2">User</th>
+              <th className="border px-4 py-2">Blogs created</th>
             </tr>
           </thead>
           <tbody>
             {users
               .sort((a, b) => b.blogs.length - a.blogs.length)
               .map((user, i) => (
-                <tr key={i}>
-                  <td>
+                <tr key={i} className={i % 2 !== 0 ? 'bg-gray-200' : ''}>
+                  <td className="border px-4 py-2">
                     <Link to={`/users/${user.id}`}>{user.name}</Link>
                   </td>
-                  <td>{user.blogs.length}</td>
+                  <td className="border px-4 py-2">{user.blogs.length}</td>
                 </tr>
               ))}
           </tbody>
