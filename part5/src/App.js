@@ -8,20 +8,12 @@ import Landing from './components/Landing';
 import Users from './components/Users';
 import User from './components/User';
 import SingleBlog from './components/SingleBlog';
+import Login from './components/Login';
 import './index.css';
-import { setNotification } from './store/actions/notificationActions';
 import { initializeBlogs } from './store/actions/blogActions';
-import { userLoginFromLocalStorage, logout } from './store/actions/userActions';
+import { userLoginFromLocalStorage } from './store/actions/userActions';
 
-const App = ({
-  blogs,
-  setNotification,
-  timerId,
-  initializeBlogs,
-  user,
-  userLoginFromLocalStorage,
-  logout
-}) => {
+const App = ({ blogs, initializeBlogs, user, userLoginFromLocalStorage }) => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('user');
     if (loggedUserJSON) {
@@ -30,12 +22,6 @@ const App = ({
       initializeBlogs();
     }
   }, [initializeBlogs, userLoginFromLocalStorage]);
-
-  const handleLogout = () => {
-    window.localStorage.removeItem('user');
-    setNotification(`user ${user.name} logged out`, 'error', timerId);
-    logout();
-  };
 
   const loginForm = () => {
     return (
@@ -49,27 +35,23 @@ const App = ({
     <div>
       <Router>
         <header>
-          <h1>Bloglist</h1>
           <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
+            <ul className="menu">
+              <li className="menu-item">
+                <Link to="/">Blogs</Link>
               </li>
-              <li>
+              <li className="menu-item">
                 <Link to="/users">Users</Link>
+              </li>
+              <li className="menu-item">
+                <Login />
               </li>
             </ul>
           </nav>
+          <Notification />
+          <h1>Bloglist</h1>
         </header>
-        <Notification />
         {!user && loginForm()}
-        {user && (
-          <div>
-            <span>{user.name} logged in </span>
-            <button onClick={handleLogout}>logout</button>
-            <hr />
-          </div>
-        )}
         <Route exact path="/">
           <Landing />
         </Route>
@@ -88,14 +70,11 @@ const App = ({
 };
 
 const mapStateToProps = state => ({
-  timerId: state.notification.id,
   user: state.user,
   blogs: state.blogs
 });
 
 export default connect(mapStateToProps, {
-  setNotification,
   initializeBlogs,
-  userLoginFromLocalStorage,
-  logout
+  userLoginFromLocalStorage
 })(App);

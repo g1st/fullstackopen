@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, Redirect } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import blogService from '../services/blogService';
@@ -12,10 +12,6 @@ const SingleBlog = ({ blogs, removeBlog, user, timerId, setNotification }) => {
   const [removeBlogStatus, setRemoveBlogStatus] = useState('idle');
   const [likes, setLikes] = useState(0);
   const { id } = useParams();
-
-  if (!user) {
-    return <Redirect to="/" />;
-  }
 
   let blog;
   if (blogs.length > 0) {

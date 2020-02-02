@@ -13,3 +13,13 @@ h2 {
   border-color: darkred;
   color: darkred
 }
+
+.menu {
+  list-style: none;
+  display: flex;
+  background-color: lightgrey;
+}
+
+.menu-item {
+  padding: 0.25em;
+}
