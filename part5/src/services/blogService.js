@@ -39,4 +39,19 @@ const getAllBlogs = () => {
   return request.then(response => response.data);
 };
 
-export default { getAllBlogs, setToken, sendLike, removeBlog };
+const sendComment = (id, comment) => {
+  const request = axios({
+    method: 'post',
+    url: `${baseUrl}/${id}/comments`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token
+    },
+    data: {
+      comment
+    }
+  });
+  return request.then(response => response.data);
+};
+
+export default { getAllBlogs, setToken, sendLike, removeBlog, sendComment };

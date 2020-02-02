@@ -1,8 +1,10 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import blogReducer from './reducers/blogReducer';
 import notificationReducer from './reducers/notificationReducer';
 import userReducer from './reducers/userReducer';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   combineReducers({
@@ -10,7 +12,7 @@ const store = createStore(
     notification: notificationReducer,
     user: userReducer
   }),
-  applyMiddleware(thunk)
+  composeEnhancers(applyMiddleware(thunk))
 );
 
 export default store;
