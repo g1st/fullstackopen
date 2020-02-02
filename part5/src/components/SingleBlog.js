@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import blogService from '../services/blogService';
 import { setNotification } from '../store/actions/notificationActions';
 import { removeBlog } from '../store/actions/blogActions';
+import Comments from './Comments';
 
 const SingleBlog = ({ blogs, removeBlog, user, timerId, setNotification }) => {
   // idle, sending, success, error
@@ -67,6 +68,7 @@ const SingleBlog = ({ blogs, removeBlog, user, timerId, setNotification }) => {
           remove
         </button>
       ) : null}
+      <Comments blog={blog} />
     </>
   ) : null;
 };
