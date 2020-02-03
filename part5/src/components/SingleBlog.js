@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import blogService from '../services/blogService';
@@ -14,7 +14,9 @@ const SingleBlog = ({ blogs, removeBlog, user, timerId, setNotification }) => {
   const [likes, setLikes] = useState(0);
   const { id } = useParams();
 
+  let history = useHistory();
   let blog;
+
   if (blogs.length > 0) {
     blog = blogs.filter(blog => blog.id === id)[0];
   }
@@ -37,6 +39,7 @@ const SingleBlog = ({ blogs, removeBlog, user, timerId, setNotification }) => {
         removeBlog(blog.id);
         setRemoveBlogStatus('success');
         setNotification(`${blog.title} REMOVED`, 'error', timerId);
+        history.push('/');
       } catch (e) {
         if (e.message && e.message.includes('401')) {
           alert('You are unauthorized to remove this message');

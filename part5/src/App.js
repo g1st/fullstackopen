@@ -43,7 +43,11 @@ const App = ({ blogs, initializeBlogs, user, userLoginFromLocalStorage }) => {
                 </Link>
               </li>
               <li className="mr-6">
-                <Link to="/users" className="text-blue-500 hover:text-blue-800">
+                <Link
+                  data-cy="link-users"
+                  to="/users"
+                  className="text-blue-500 hover:text-blue-800"
+                >
                   Users
                 </Link>
               </li>

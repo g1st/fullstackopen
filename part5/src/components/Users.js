@@ -29,7 +29,9 @@ const Users = ({ user }) => {
               .map((user, i) => (
                 <tr key={i} className={i % 2 !== 0 ? 'bg-gray-200' : ''}>
                   <td className="border px-4 py-2">
-                    <Link to={`/users/${user.id}`}>{user.name}</Link>
+                    <Link data-cy="link-user" to={`/users/${user.id}`}>
+                      {user.name}
+                    </Link>
                   </td>
                   <td className="border px-4 py-2">{user.blogs.length}</td>
                 </tr>

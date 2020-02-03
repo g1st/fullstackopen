@@ -46,6 +46,15 @@ describe('Blog ', function() {
       cy.contains('Justin Bieber logged in');
     });
 
+    it('notification shows up', function() {
+      cy.get('[data-cy=notification]').should('exist');
+    });
+
+    it('notification should disappear after 5s', function() {
+      cy.wait(5000);
+      cy.get('[data-cy=notification]').should('not.exist');
+    });
+
     it('a new blogpost can be created', function() {
       cy.contains('new blog post').click();
       cy.get('#title').type('a note created by cypress');
@@ -55,7 +64,7 @@ describe('Blog ', function() {
       cy.contains('a note created by cypress');
     });
 
-    describe('and a note is created', function() {
+    describe('and a blog is created', function() {
       beforeEach(function() {
         cy.contains('new blog post').click();
         cy.get('#title').type('another cypress note');
@@ -65,13 +74,23 @@ describe('Blog ', function() {
       });
 
       it('a blogpost can be removed', function() {
-        cy.get('[data-testid=more-info]').should('have.length', 1);
-        cy.get('[data-testid=more-info]').click();
+        cy.get('[data-cy=blog-link]').click();
         cy.contains('remove').click();
         cy.on('window:confirm', str => {
           expect(str).contains('remove blog');
         });
-        cy.get('[data-testid=more-info]').should('not.exist');
+        cy.contains('another cypress note REMOVED');
+        cy.get('[data-cy=blog-link]').should('not.exist');
+      });
+      it('user should not have any blog posts associated', function() {
+        cy.get('[data-cy=blog-link]').click();
+        cy.contains('remove').click();
+        cy.on('window:confirm', str => {
+          expect(str).contains('remove blog');
+        });
+        cy.get('[data-cy=link-users]').click();
+        cy.get('[data-cy=link-user]').click();
+        cy.contains('no blogs found');
       });
     });
   });

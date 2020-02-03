@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 const Notification = ({ message, error }) => {
   return (
     message && (
-      <div className={error ? 'text-red-500' : 'text-green-500'}>{message}</div>
+      <div
+        data-cy="notification"
+        className={error ? 'text-red-500' : 'text-green-500'}
+      >
+        {message}
+      </div>
     )
   );
 };
