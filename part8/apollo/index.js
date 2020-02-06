@@ -149,15 +149,7 @@ const resolvers = {
 
       return books.filter(authorANDgenre);
     },
-    allAuthors: () => {
-      return authors.map(author => {
-        author.bookCount = 0;
-        books.forEach(book => {
-          if (book.author === author.name) author.bookCount++;
-        });
-        return author;
-      });
-    }
+    allAuthors: () => authors
   },
   Mutation: {
     addBook: (root, args) => {
@@ -174,6 +166,13 @@ const resolvers = {
         authors = authors.concat(newAuthor);
       }
       return book;
+  Author: {
+    bookCount: root => {
+      let counter = 0;
+      books.forEach(book => {
+        if (book.author === root.name) counter++;
+      });
+      return counter;
     }
   }
 };
