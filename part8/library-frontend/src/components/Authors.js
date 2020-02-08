@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { gql } from 'apollo-boost';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 export const ALL_AUTHORS = gql`
   query {
@@ -12,11 +12,40 @@ export const ALL_AUTHORS = gql`
   }
 `;
 
+const SET_BIRTHYEAR = gql`
+  mutation editAuthor($name: String!, $born: Int!) {
+    editAuthor(name: $name, setBornTo: $born) {
+      name
+      born
+      bookCount
+    }
+  }
+`;
+
 const Authors = props => {
   const { loading, error, data } = useQuery(ALL_AUTHORS);
+  const [setBirthyear, { data: mutationData }] = useMutation(SET_BIRTHYEAR, {
+    refetchQueries: [{ query: ALL_AUTHORS }]
+  });
+  const [born, setBorn] = useState('');
+  const [name, setName] = useState('');
   if (!props.show) {
     return null;
   }
+
+  const submit = async e => {
+    e.preventDefault();
+
+    await setBirthyear({
+      variables: {
+        born: Number(born),
+        name
+      }
+    });
+
+    setName('');
+    setBorn('');
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error :(</div>;
@@ -24,6 +53,7 @@ const Authors = props => {
   return (
     <div>
       <h2>authors</h2>
+      {console.log(mutationData)}
       <table>
         <tbody>
           <tr>
@@ -40,6 +70,26 @@ const Authors = props => {
           ))}
         </tbody>
       </table>
+      <h3>set birthyear</h3>
+      <form onSubmit={submit}>
+        <div>
+          name
+          <input
+            type="text"
+            value={name}
+            onChange={({ target }) => setName(target.value)}
+          />
+        </div>
+        <div>
+          born
+          <input
+            type="number"
+            value={born}
+            onChange={({ target }) => setBorn(target.value)}
+          />
+        </div>
+        <button type="submit">update author</button>
+      </form>
     </div>
   );
 };
