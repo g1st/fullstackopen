@@ -65,7 +65,7 @@ const typeDefs = gql`
   type Mutation {
     addBook(
       title: String!
-      author: String
+      author: String!
       published: Int!
       genres: [String!]!
     ): Book
@@ -134,7 +134,6 @@ const resolvers = {
   Mutation: {
     addBook: async (root, args, { currentUser }) => {
       const { title, author: name } = args;
-
       if (!currentUser) {
         throw new AuthenticationError('not authenticated');
       }

@@ -8,6 +8,7 @@ export const ALL_AUTHORS = gql`
       name
       born
       bookCount
+      id
     }
   }
 `;
@@ -18,14 +19,22 @@ const SET_BIRTHYEAR = gql`
       name
       born
       bookCount
+      id
     }
   }
 `;
 
 const Authors = props => {
   const { loading, error, data } = useQuery(ALL_AUTHORS);
-  const [setBirthyear, { data: mutationData }] = useMutation(SET_BIRTHYEAR, {
-    refetchQueries: [{ query: ALL_AUTHORS }]
+  const [setBirthyear] = useMutation(SET_BIRTHYEAR, {
+    onError: props.handleError,
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_AUTHORS });
+      store.writeQuery({
+        query: ALL_AUTHORS,
+        data: dataInStore
+      });
+    }
   });
   const [born, setBorn] = useState('');
   const [name, setName] = useState('');
@@ -35,7 +44,6 @@ const Authors = props => {
 
   const submit = async e => {
     e.preventDefault();
-
     await setBirthyear({
       variables: {
         born: Number(born),
@@ -53,7 +61,6 @@ const Authors = props => {
   return (
     <div>
       <h2>authors</h2>
-      {console.log(mutationData)}
       <table>
         <tbody>
           <tr>
@@ -62,7 +69,7 @@ const Authors = props => {
             <th>books</th>
           </tr>
           {data.allAuthors.map(a => (
-            <tr key={a.name}>
+            <tr key={a.id}>
               <td>{a.name}</td>
               <td>{a.born}</td>
               <td>{a.bookCount}</td>
@@ -79,8 +86,9 @@ const Authors = props => {
             name="authors"
             id="authors"
           >
+            <option key="default">Select Author</option>
             {data.allAuthors.map(author => (
-              <option key={author.name} value={author.name}>
+              <option key={author.id} value={author.name}>
                 {author.name}
               </option>
             ))}

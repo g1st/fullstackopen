@@ -18,9 +18,15 @@ const ADD_BOOK = gql`
       genres: $genres
     ) {
       title
-      author
       published
       genres
+      id
+      author {
+        name
+        id
+        bookCount
+        born
+      }
     }
   }
 `;
@@ -32,8 +38,22 @@ const NewBook = props => {
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]);
 
-  const [addBook, { data }] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
+  const [addBook] = useMutation(ADD_BOOK, {
+    onError: props.handleError,
+    update: (store, response) => {
+      const booksInStore = store.readQuery({ query: ALL_BOOKS });
+      booksInStore.allBooks.push(response.data.addBook);
+      store.writeQuery({
+        query: ALL_BOOKS,
+        data: booksInStore
+      });
+      const authorsInStore = store.readQuery({ query: ALL_AUTHORS });
+      authorsInStore.allAuthors.push(response.data.addBook.author);
+      store.writeQuery({
+        query: ALL_AUTHORS,
+        data: authorsInStore
+      });
+    }
   });
 
   if (!props.show) {
@@ -42,7 +62,6 @@ const NewBook = props => {
 
   const submit = async e => {
     e.preventDefault();
-
     await addBook({
       variables: {
         title,
@@ -66,7 +85,6 @@ const NewBook = props => {
 
   return (
     <div>
-      {console.log(data)}
       <form onSubmit={submit}>
         <div>
           title
