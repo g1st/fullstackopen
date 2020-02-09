@@ -56,46 +56,76 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    bookCount: () => {
-      return books.length;
-    },
-    authorCount: () => {
-      return authors.length;
-    },
-    allBooks: (root, args) => {
-      if (!args.author && !args.genre) {
-        return books;
+    bookCount: async () => {
+      try {
+        return Book.countDocuments();
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args
+        });
       }
-
-      if (!args.genre) {
-        const authorQuery = book => book.author === args.author;
-
-        return books.filter(authorQuery);
-      }
-
-      if (!args.author) {
-        const genreQuery = book => book.genres.includes(args.genre);
-
-        return books.filter(genreQuery);
-      }
-
-      const authorANDgenre = book =>
-        book.author === args.author && book.genres.includes(args.genre);
-
-      return books.filter(authorANDgenre);
     },
-    allAuthors: () => authors
+    authorCount: async () => {
+      try {
+        return Author.countDocuments();
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args
+        });
+      }
+    },
+    allBooks: async (root, args) => {
+      const { author, genre } = args;
+      try {
+        if (!author && !genre) {
+          return await Book.find({});
+        }
+
+        if (!genre) {
+          const { _id } = await Author.findOne({ name: author }, '_id');
+          return Book.find({
+            author: _id
+          });
+        }
+
+        if (!author) {
+          return Book.find({
+            genres: { $in: genre }
+          });
+        }
+
+        const { _id } = await Author.findOne({ name: author }, '_id');
+        return Book.find({
+          author: _id,
+          genres: { $in: genre }
+        });
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args
+        });
+      }
+    },
+    allAuthors: async () => {
+      try {
+        return Author.find();
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args
+        });
+      }
+    }
   },
   Mutation: {
     addBook: async (root, args) => {
+      const { title, author: name } = args;
       try {
-        let book = await Book.findOne({ title: args.title });
+        let book = await Book.findOne({ title: title });
         if (book) {
-          throw new Error(`Book with title '${args.title}' already exists`);
+          throw new Error(`Book with title '${title}' already exists`);
         }
-        let author = await Author.findOne({ name: args.author });
+        let author = await Author.findOne({ name });
         if (!author) {
-          author = new Author({ name: args.author });
+          author = new Author({ name });
           await author.save();
         }
         book = new Book({ ...args, author });
@@ -107,28 +137,26 @@ const resolvers = {
         });
       }
     },
-    editAuthor: (root, args) => {
-      const authorNames = authors.map(author => author.name);
-      if (!authorNames.includes(args.name)) {
-        return null;
+    editAuthor: async (root, args) => {
+      const { name, setBornTo: born } = args;
+      try {
+        return Author.findOneAndUpdate({ name }, { born }, { new: true });
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args
+        });
       }
-
-      authors.map(author => {
-        if (author.name === args.name) {
-          author.born = args.setBornTo;
-        }
-        return author;
-      });
-      return authors.find(author => author.name === args.name);
     }
   },
   Author: {
-    bookCount: root => {
-      let counter = 0;
-      books.forEach(book => {
-        if (book.author === root.name) counter++;
-      });
-      return counter;
+    bookCount: async root => {
+      try {
+        return Book.countDocuments({ author: root.id });
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args
+        });
+      }
     }
   },
   Book: {
