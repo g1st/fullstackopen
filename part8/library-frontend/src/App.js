@@ -6,6 +6,7 @@ import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
+import Recommendations from './components/Recommendations';
 
 const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
@@ -43,6 +44,7 @@ const App = () => {
     setToken(null);
     localStorage.clear();
     client.resetStore();
+    setPage('authors');
   };
 
   return (
@@ -53,6 +55,9 @@ const App = () => {
         {token ? (
           <>
             <button onClick={() => setPage('add')}>add book</button>
+            <button onClick={() => setPage('recommendations')}>
+              recommendations
+            </button>
             <button onClick={logout}>logout</button>
           </>
         ) : (
@@ -63,6 +68,12 @@ const App = () => {
       <Authors show={page === 'authors'} handleError={handleError} />
       <Books show={page === 'books'} />
       <NewBook show={page === 'add'} handleError={handleError} />
+      {page === 'recommendations' && (
+        <Recommendations
+          show={page === 'recommendations'}
+          handleError={handleError}
+        />
+      )}
       <LoginForm
         show={page === 'login'}
         setPage={setPage}
