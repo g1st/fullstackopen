@@ -24,8 +24,16 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleError = error => {
-    setErrorMessage(error.graphQLErrors[0].message);
-    setErrorMessage('bla bla');
+    let errorMessage;
+    if (
+      error.hasOwnProperty('graphQLErrors') &&
+      error.graphQLErrors.length > 0
+    ) {
+      errorMessage = error.graphQLErrors[0].message;
+    } else {
+      errorMessage = error.message;
+    }
+    setErrorMessage(errorMessage);
     setTimeout(() => {
       setErrorMessage(null);
     }, 10000);
