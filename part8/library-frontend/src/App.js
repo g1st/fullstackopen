@@ -75,7 +75,9 @@ const App = () => {
       {errorNotification()}
       <Authors show={page === 'authors'} handleError={handleError} />
       <Books show={page === 'books'} />
-      <NewBook show={page === 'add'} handleError={handleError} />
+      {page === 'add' && (
+        <NewBook show={page === 'add'} handleError={handleError} />
+      )}
       {page === 'recommendations' && (
         <Recommendations
           show={page === 'recommendations'}

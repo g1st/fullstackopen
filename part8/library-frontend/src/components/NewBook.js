@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { ALL_BOOKS } from './Books';
 import { ALL_AUTHORS } from './Authors';
+import { USER, BOOKS_BY_GENRE } from './Recommendations';
 
 const ADD_BOOK = gql`
   mutation addBook(
@@ -23,9 +24,6 @@ const ADD_BOOK = gql`
       id
       author {
         name
-        id
-        bookCount
-        born
       }
     }
   }
@@ -38,20 +36,47 @@ const NewBook = props => {
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]);
 
+  const { data: { me: { favoriteGenre } = {} } = {} } = useQuery(USER);
+  const variables = { genre: favoriteGenre };
+
   const [addBook] = useMutation(ADD_BOOK, {
     onError: props.handleError,
-    update: (store, response) => {
-      const booksInStore = store.readQuery({ query: ALL_BOOKS });
-      booksInStore.allBooks.push(response.data.addBook);
-      store.writeQuery({
+    update: (cache, response) => {
+      if (
+        cache.data.data.ROOT_QUERY[`allBooks({"genre":"${favoriteGenre}"})`]
+      ) {
+        const booksByGenreInCache = cache.readQuery({
+          query: BOOKS_BY_GENRE,
+          variables
+        });
+        booksByGenreInCache.allBooks.push(response.data.addBook);
+        cache.writeQuery({
+          query: BOOKS_BY_GENRE,
+          variables,
+          data: booksByGenreInCache
+        });
+      }
+
+      const booksInCache = cache.readQuery({ query: ALL_BOOKS });
+      booksInCache.allBooks.push(response.data.addBook);
+      cache.writeQuery({
         query: ALL_BOOKS,
-        data: booksInStore
+        data: booksInCache
       });
-      const authorsInStore = store.readQuery({ query: ALL_AUTHORS });
-      authorsInStore.allAuthors.push(response.data.addBook.author);
-      store.writeQuery({
+
+      const authorsInCache = cache.readQuery({ query: ALL_AUTHORS });
+      const indexOfExistingAuthor = authorsInCache.allAuthors.findIndex(
+        obj => obj.name === author
+      );
+
+      if (indexOfExistingAuthor >= 0) {
+        authorsInCache.allAuthors[indexOfExistingAuthor].bookCount++;
+      } else {
+        authorsInCache.allAuthors.push(response.data.addBook.author);
+      }
+      cache.writeQuery({
         query: ALL_AUTHORS,
-        data: authorsInStore
+        data: authorsInCache
       });
     }
   });

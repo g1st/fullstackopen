@@ -11,7 +11,7 @@ export const USER = gql`
   }
 `;
 
-export const ALL_BOOKS = gql`
+export const BOOKS_BY_GENRE = gql`
   query allBooks($genre: String) {
     allBooks(genre: $genre) {
       title
@@ -29,7 +29,7 @@ const Recommendations = props => {
   const { data: { me: { favoriteGenre } = {} } = {} } = useQuery(USER);
   const variables = { genre: favoriteGenre };
   const skip = favoriteGenre === undefined;
-  const { loading, error, data: dataBooks } = useQuery(ALL_BOOKS, {
+  const { loading, error, data: dataBooks } = useQuery(BOOKS_BY_GENRE, {
     variables,
     skip
   });
