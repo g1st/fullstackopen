@@ -27,14 +27,7 @@ const SET_BIRTHYEAR = gql`
 const Authors = props => {
   const { loading, error, data } = useQuery(ALL_AUTHORS);
   const [setBirthyear] = useMutation(SET_BIRTHYEAR, {
-    onError: props.handleError,
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_AUTHORS });
-      store.writeQuery({
-        query: ALL_AUTHORS,
-        data: dataInStore
-      });
-    }
+    onError: props.handleError
   });
   const [born, setBorn] = useState('');
   const [name, setName] = useState('');
