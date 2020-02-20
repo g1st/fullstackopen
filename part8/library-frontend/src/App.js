@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { gql } from 'apollo-boost';
 import {
+  useQuery,
   useMutation,
   useApolloClient,
   useSubscription
@@ -30,12 +31,29 @@ const BOOK_ADDED = gql`
   ${BOOK_DETAILS}
 `;
 
+export const USER = gql`
+  query {
+    me {
+      username
+      favoriteGenre
+    }
+  }
+`;
+
 const App = () => {
   const [page, setPage] = useState('authors');
   const [token, setToken] = useState(
     localStorage.getItem('user-token') || null
   );
   const [errorMessage, setErrorMessage] = useState(null);
+  const [favoriteGenre, setFavoriteGenre] = useState(null);
+  const { data } = useQuery(USER, { skip: !token });
+
+  useEffect(() => {
+    if (data) {
+      setFavoriteGenre(data.me.favoriteGenre);
+    }
+  }, [data]);
 
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
@@ -95,15 +113,16 @@ const App = () => {
       {errorNotification()}
       <Authors show={page === 'authors'} handleError={handleError} />
       <Books show={page === 'books'} />
-      {page === 'add' && (
-        <NewBook show={page === 'add'} handleError={handleError} />
-      )}
-      {page === 'recommendations' && (
-        <Recommendations
-          show={page === 'recommendations'}
-          handleError={handleError}
-        />
-      )}
+      <NewBook
+        show={page === 'add'}
+        handleError={handleError}
+        favoriteGenre={favoriteGenre}
+      />
+      <Recommendations
+        show={page === 'recommendations'}
+        handleError={handleError}
+        favoriteGenre={favoriteGenre}
+      />
       <LoginForm
         show={page === 'login'}
         setPage={setPage}

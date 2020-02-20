@@ -3,15 +3,6 @@ import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { BOOK_DETAILS } from '../fragments';
 
-export const USER = gql`
-  query {
-    me {
-      username
-      favoriteGenre
-    }
-  }
-`;
-
 export const BOOKS_BY_GENRE = gql`
   query allBooks($genre: String) {
     allBooks(genre: $genre) {
@@ -21,15 +12,14 @@ export const BOOKS_BY_GENRE = gql`
   ${BOOK_DETAILS}
 `;
 
-const Recommendations = props => {
-  const { data: { me: { favoriteGenre } = {} } = {} } = useQuery(USER);
+const Recommendations = ({ show, favoriteGenre }) => {
   const variables = { genre: favoriteGenre };
   const skip = favoriteGenre === undefined;
   const { loading, error, data: dataBooks } = useQuery(BOOKS_BY_GENRE, {
     variables,
     skip
   });
-  if (!props.show) {
+  if (!show) {
     return null;
   }
 

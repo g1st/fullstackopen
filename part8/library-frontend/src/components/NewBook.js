@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { ALL_BOOKS } from './Books';
 import { ALL_AUTHORS } from './Authors';
-import { USER, BOOKS_BY_GENRE } from './Recommendations';
+import { BOOKS_BY_GENRE } from './Recommendations';
 import { BOOK_DETAILS } from '../fragments';
 
 const ADD_BOOK = gql`
@@ -32,14 +32,15 @@ const NewBook = props => {
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]);
 
-  const { data: { me: { favoriteGenre } = {} } = {} } = useQuery(USER);
-  const variables = { genre: favoriteGenre };
+  const variables = { genre: props.favoriteGenre };
 
   const [addBook] = useMutation(ADD_BOOK, {
     onError: props.handleError,
     update: (cache, response) => {
       if (
-        cache.data.data.ROOT_QUERY[`allBooks({"genre":"${favoriteGenre}"})`]
+        cache.data.data.ROOT_QUERY[
+          `allBooks({"genre":"${props.favoriteGenre}"})`
+        ]
       ) {
         const booksByGenreInCache = cache.readQuery({
           query: BOOKS_BY_GENRE,
