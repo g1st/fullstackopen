@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { gql } from 'apollo-boost';
-import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import {
+  useMutation,
+  useApolloClient,
+  useSubscription
+} from '@apollo/react-hooks';
 
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
 import Recommendations from './components/Recommendations';
+import { BOOK_DETAILS } from './fragments';
 
 const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
@@ -16,12 +21,27 @@ const LOGIN = gql`
   }
 `;
 
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
+    }
+  }
+  ${BOOK_DETAILS}
+`;
+
 const App = () => {
   const [page, setPage] = useState('authors');
   const [token, setToken] = useState(
     localStorage.getItem('user-token') || null
   );
   const [errorMessage, setErrorMessage] = useState(null);
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData);
+    }
+  });
 
   const handleError = error => {
     let errorMessage;
