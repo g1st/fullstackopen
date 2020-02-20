@@ -50,7 +50,6 @@ const Books = props => {
 
   return (
     <div>
-      {extractGenres(data)}
       <h2>books</h2>
 
       <div>
