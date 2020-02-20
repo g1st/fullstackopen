@@ -4,6 +4,7 @@ import { gql } from 'apollo-boost';
 import { ALL_BOOKS } from './Books';
 import { ALL_AUTHORS } from './Authors';
 import { USER, BOOKS_BY_GENRE } from './Recommendations';
+import { BOOK_DETAILS } from '../fragments';
 
 const ADD_BOOK = gql`
   mutation addBook(
@@ -18,15 +19,10 @@ const ADD_BOOK = gql`
       published: $published
       genres: $genres
     ) {
-      title
-      published
-      genres
-      id
-      author {
-        name
-      }
+      ...BookDetails
     }
   }
+  ${BOOK_DETAILS}
 `;
 
 const NewBook = props => {

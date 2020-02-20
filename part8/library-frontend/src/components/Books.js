@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
+import { BOOK_DETAILS } from '../fragments';
 
 export const ALL_BOOKS = gql`
   query {
     allBooks {
-      title
-      published
-      id
-      genres
-      author {
-        name
-      }
+      ...BookDetails
     }
   }
+  ${BOOK_DETAILS}
 `;
 
 const Books = props => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
+import { BOOK_DETAILS } from '../fragments';
 
 export const USER = gql`
   query {
@@ -14,15 +15,10 @@ export const USER = gql`
 export const BOOKS_BY_GENRE = gql`
   query allBooks($genre: String) {
     allBooks(genre: $genre) {
-      title
-      published
-      id
-      genres
-      author {
-        name
-      }
+      ...BookDetails
     }
   }
+  ${BOOK_DETAILS}
 `;
 
 const Recommendations = props => {
