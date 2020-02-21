@@ -101,7 +101,7 @@ const resolvers = {
       const { author, genre } = args;
       try {
         if (!author && !genre) {
-          return await Book.find({});
+          return Book.find({});
         }
 
         if (!genre) {

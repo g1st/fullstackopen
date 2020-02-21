@@ -11,8 +11,11 @@ import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
-import Recommendations from './components/Recommendations';
+import Recommendations, { BOOKS_BY_GENRE } from './components/Recommendations';
 import { BOOK_DETAILS } from './fragments';
+import { ALL_BOOKS } from './components/Books';
+import { ALL_AUTHORS } from './components/Authors';
+import { alreadyExists } from './utils';
 
 const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
@@ -56,8 +59,42 @@ const App = () => {
   }, [data]);
 
   useSubscription(BOOK_ADDED, {
-    onSubscriptionData: ({ subscriptionData }) => {
-      console.log(subscriptionData);
+    onSubscriptionData: ({ subscriptionData, client }) => {
+      // update books cache
+      const { bookAdded } = subscriptionData.data;
+      const { allBooks } = client.readQuery({ query: ALL_BOOKS });
+      if (!alreadyExists(allBooks, bookAdded)) {
+        allBooks.push(bookAdded);
+        client.writeQuery({ query: ALL_BOOKS, data: { allBooks } });
+      }
+
+      // update authors cache
+      const { allAuthors } = client.readQuery({ query: ALL_AUTHORS });
+      if (alreadyExists(allAuthors, bookAdded.author)) {
+        allAuthors.map(author => {
+          if (author.id === bookAdded.author.id) {
+            author.bookCount++;
+          }
+          return author;
+        });
+      } else {
+        allAuthors.push(bookAdded.author);
+        client.writeQuery({ query: ALL_AUTHORS, data: { allAuthors } });
+      }
+
+      // update recommendations cache
+      if (bookAdded.genres.includes(favoriteGenre)) {
+        const booksByGenreInCache = client.readQuery({
+          query: BOOKS_BY_GENRE,
+          variables: { genre: favoriteGenre }
+        });
+        booksByGenreInCache.allBooks.push(bookAdded);
+        client.writeQuery({
+          query: BOOKS_BY_GENRE,
+          variables: { genre: favoriteGenre },
+          data: booksByGenreInCache
+        });
+      }
     }
   });
 
