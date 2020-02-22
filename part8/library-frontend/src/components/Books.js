@@ -20,6 +20,9 @@ const Books = props => {
     return null;
   }
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error :(</div>;
+
   const extractGenres = data => {
     const genres = data.allBooks.reduce(
       (acc, book) => {
@@ -40,9 +43,6 @@ const Books = props => {
       {genre}
     </button>
   ));
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error :(</div>;
 
   return (
     <div>

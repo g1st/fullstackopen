@@ -116,10 +116,12 @@ const resolvers = {
             genres: { $in: genre }
           });
         }
-
-        const { _id } = await Author.findOne({ name: author }, '_id');
+        const singleAuthor = await Author.findOne({ name: author }, '_id');
+        if (singleAuthor === null) {
+          return [];
+        }
         return Book.find({
-          author: _id,
+          author: singleAuthor._id,
           genres: { $in: genre }
         });
       } catch (e) {
@@ -150,12 +152,17 @@ const resolvers = {
           throw new Error(`Book with title '${title}' already exists`);
         }
         let author = await Author.findOne({ name });
+
         if (!author) {
           author = new Author({ name });
-          await author.save();
         }
+
         book = new Book({ ...args, author });
         await book.save();
+
+        author.books.push(book._id);
+        await author.save();
+
         pubsub.publish('BOOK_ADDED', { bookAdded: book });
         return book;
       } catch (e) {
@@ -208,15 +215,6 @@ const resolvers = {
         throw new UserInputError(e.message, {
           invalidArgs: args
         });
-      }
-    }
-  },
-  Author: {
-    bookCount: async root => {
-      try {
-        return Book.countDocuments({ author: root.id });
-      } catch (e) {
-        throw new UserInputError(e.message);
       }
     }
   },

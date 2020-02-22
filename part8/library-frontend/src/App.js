@@ -70,14 +70,7 @@ const App = () => {
 
       // update authors cache
       const { allAuthors } = client.readQuery({ query: ALL_AUTHORS });
-      if (alreadyExists(allAuthors, bookAdded.author)) {
-        allAuthors.map(author => {
-          if (author.id === bookAdded.author.id) {
-            author.bookCount++;
-          }
-          return author;
-        });
-      } else {
+      if (!alreadyExists(allAuthors, bookAdded.author)) {
         allAuthors.push(bookAdded.author);
         client.writeQuery({ query: ALL_AUTHORS, data: { allAuthors } });
       }
