@@ -1,26 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
-import { BOOK_DETAILS } from '../fragments';
-
-const ADD_BOOK = gql`
-  mutation addBook(
-    $title: String!
-    $author: String!
-    $published: Int!
-    $genres: [String!]!
-  ) {
-    addBook(
-      title: $title
-      author: $author
-      published: $published
-      genres: $genres
-    ) {
-      ...BookDetails
-    }
-  }
-  ${BOOK_DETAILS}
-`;
+import ADD_BOOK from '../graphql/mutations/addBook';
 
 const NewBook = ({ favoriteGenre, show, handleError }) => {
   const [title, setTitle] = useState('');

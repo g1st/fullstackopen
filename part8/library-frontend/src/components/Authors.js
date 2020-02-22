@@ -1,32 +1,12 @@
 import React, { useState } from 'react';
-import { gql } from 'apollo-boost';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
-export const ALL_AUTHORS = gql`
-  query {
-    allAuthors {
-      name
-      born
-      bookCount
-      id
-    }
-  }
-`;
-
-const SET_BIRTHYEAR = gql`
-  mutation editAuthor($name: String!, $born: Int!) {
-    editAuthor(name: $name, setBornTo: $born) {
-      name
-      born
-      bookCount
-      id
-    }
-  }
-`;
+import ALL_AUTHORS from '../graphql/queries/allAuthors';
+import SET_AUTHOR_BIRTHYEAR from '../graphql/mutations/setAuthorBirthYear';
 
 const Authors = props => {
   const { loading, error, data } = useQuery(ALL_AUTHORS);
-  const [setBirthyear] = useMutation(SET_BIRTHYEAR, {
+  const [setBirthyear] = useMutation(SET_AUTHOR_BIRTHYEAR, {
     onError: props.handleError
   });
   const [born, setBorn] = useState('');

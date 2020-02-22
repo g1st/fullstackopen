@@ -1,16 +1,7 @@
 import React, { useState } from 'react';
-import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { BOOK_DETAILS } from '../fragments';
 
-export const ALL_BOOKS = gql`
-  query {
-    allBooks {
-      ...BookDetails
-    }
-  }
-  ${BOOK_DETAILS}
-`;
+import ALL_BOOKS from '../graphql/queries/allBooks';
 
 const Books = props => {
   const { loading, error, data } = useQuery(ALL_BOOKS);

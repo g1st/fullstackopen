@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { gql } from 'apollo-boost';
 import {
   useQuery,
   useMutation,
@@ -11,37 +10,14 @@ import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
-import Recommendations, { BOOKS_BY_GENRE } from './components/Recommendations';
-import { BOOK_DETAILS } from './fragments';
-import { ALL_BOOKS } from './components/Books';
-import { ALL_AUTHORS } from './components/Authors';
+import Recommendations from './components/Recommendations';
+import ALL_BOOKS from './graphql/queries/allBooks';
+import ALL_AUTHORS from './graphql/queries/allAuthors';
+import BOOKS_BY_GENRE from './graphql/queries/allBooksByGenre';
 import { alreadyExists } from './utils';
-
-const LOGIN = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      value
-    }
-  }
-`;
-
-const BOOK_ADDED = gql`
-  subscription {
-    bookAdded {
-      ...BookDetails
-    }
-  }
-  ${BOOK_DETAILS}
-`;
-
-export const USER = gql`
-  query {
-    me {
-      username
-      favoriteGenre
-    }
-  }
-`;
+import LOGIN from './graphql/mutations/login';
+import BOOK_ADDED from './graphql/subscriptions/bookAdded';
+import USER from './graphql/queries/user';
 
 const App = () => {
   const [page, setPage] = useState('authors');

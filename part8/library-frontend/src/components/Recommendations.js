@@ -1,16 +1,7 @@
 import React from 'react';
-import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { BOOK_DETAILS } from '../fragments';
 
-export const BOOKS_BY_GENRE = gql`
-  query allBooks($genre: String) {
-    allBooks(genre: $genre) {
-      ...BookDetails
-    }
-  }
-  ${BOOK_DETAILS}
-`;
+import BOOKS_BY_GENRE from '../graphql/queries/allBooksByGenre';
 
 const Recommendations = ({ show, favoriteGenre }) => {
   const variables = { genre: favoriteGenre };
