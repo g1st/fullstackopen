@@ -1,26 +1,33 @@
-interface BmiValues {
-  value1: number;
-  value2: number;
+interface parseQuery {
+  weight: number;
+  height: number;
+  error?: string;
 }
 
-const parseArgs = (args: Array<string>): BmiValues => {
-  if (args.length < 4) {
-    throw new Error('Not enough of arguments provided');
+interface args {
+  weight: string;
+  height: string;
+}
+
+export const parseQuery = (args: args): parseQuery => {
+  if (args.weight === undefined) {
+    throw new Error('No weight provided');
   }
-  if (args.length > 4) {
-    throw new Error('Too many arguments provided');
+  if (args.height === undefined) {
+    throw new Error('No height provided');
   }
-  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+
+  if (!isNaN(Number(args.weight)) && !isNaN(Number(args.height))) {
     return {
-      value1: Number(args[2]),
-      value2: Number(args[3]),
+      weight: Number(args.weight),
+      height: Number(args.height),
     };
   } else {
     throw new Error('Parameters can only be of type number!');
   }
 };
 
-const calculateBmi = (weight: number, height: number): string => {
+export const calculateBmi = (weight: number, height: number): string => {
   const heightInMeters = height / 100;
   const BMI = weight / heightInMeters ** 2;
 
@@ -32,10 +39,3 @@ const calculateBmi = (weight: number, height: number): string => {
     return 'Overweight (unhealthy weight)';
   }
 };
-
-try {
-  const { value1, value2 } = parseArgs(process.argv);
-  console.log(calculateBmi(value1, value2));
-} catch (e) {
-  console.log('Something went wrong,', e.message);
-}
