@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "noImplicitAny": true,
+    "lib": ["ES6", "ES5"]
+  }
+}
