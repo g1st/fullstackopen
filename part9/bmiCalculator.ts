@@ -1,7 +1,6 @@
 interface parseQuery {
   weight: number;
   height: number;
-  error?: string;
 }
 
 interface args {
