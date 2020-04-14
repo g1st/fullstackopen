@@ -1,14 +1,14 @@
-interface parseQuery {
+interface ParseQuery {
   weight: number;
   height: number;
 }
 
-interface args {
+interface Args {
   weight: string;
   height: string;
 }
 
-export const parseQuery = (args: args): parseQuery => {
+export const parseQuery = (args: Args): ParseQuery => {
   if (args.weight === undefined) {
     throw new Error('No weight provided');
   }
