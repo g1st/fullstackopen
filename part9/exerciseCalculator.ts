@@ -1,23 +1,28 @@
-export {};
-
 interface CalculateExerciseValues {
   hoursArray: number[];
   target: number;
 }
 
-const parseArgs = (args: Array<string>): CalculateExerciseValues => {
-  if (args.length < 4) {
-    throw new Error('Not enough of arguments provided');
+export const parseArgs = (
+  hours: Array<string | number>,
+  target: number | string
+): CalculateExerciseValues => {
+  if (hours === undefined || target === undefined) {
+    throw new Error('Not enough of parameters provided');
   }
-  const target = args[2];
   if (isNaN(Number(target))) {
     throw new Error('Target must be a number');
   }
 
-  const inputArray = args.slice(3);
-  const hoursArray = inputArray.map((num) => Number(num));
+  if (
+    hours.some((el) => typeof el === 'undefined' || el === null || el === '')
+  ) {
+    throw new Error('Exercise hours can be represented only as a number');
+  }
 
-  if (hoursArray.some((el: number) => typeof el !== 'number' || isNaN(el))) {
+  const hoursArray = hours.map((num) => Number(num));
+
+  if (hoursArray.some((el: number) => isNaN(el))) {
     throw new Error('Exercise hours can be represented only as a number');
   }
 
@@ -50,12 +55,10 @@ interface ExerciseResult {
   ratingInfo: string;
 }
 
-const calculateExercises = (
+export const calculateExercises = (
   hoursPerDay: Array<number>,
   dailyTarget: number
 ): ExerciseResult => {
-  parseArgs(process.argv);
-
   const periodLength = hoursPerDay.length;
   const trainingDays = hoursPerDay.filter((hours) => hours > 0).length;
   const target = dailyTarget;
@@ -76,9 +79,9 @@ const calculateExercises = (
   };
 };
 
-try {
-  const { hoursArray, target } = parseArgs(process.argv);
-  console.log(calculateExercises(hoursArray, target));
-} catch (e) {
-  console.log('Sorry, something went wrong: ', e.message);
-}
+// try {
+//   const { hoursArray, target } = parseArgs(process.argv);
+//   console.log(calculateExercises(hoursArray, target));
+// } catch (e) {
+//   console.log('Sorry, something went wrong: ', e.message);
+// }
