@@ -1,23 +1,21 @@
 import express from 'express';
 import patientsService from '../services/patients';
+import toNewPatient from '../utlis/functions';
 
 const router = express.Router();
 
-router.get('/patients', (_req, res) => {
+router.get('/', (_req, res) => {
   res.json(patientsService.getPublicPatients());
 });
 
-router.post('/patients', (req, res) => {
-  const { name, dateOfBirth, ssn, gender, occupation } = req.body;
-  const newPatient = patientsService.addPatient({
-    name,
-    dateOfBirth,
-    ssn,
-    gender,
-    occupation,
-  });
-
-  res.json(newPatient);
+router.post('/', (req, res) => {
+  try {
+    const parsedNewPatient = toNewPatient(req.body);
+    const newPatient = patientsService.addPatient(parsedNewPatient);
+    res.json(newPatient);
+  } catch (e) {
+    res.status(404).json({ error: e.message });
+  }
 });
 
 export default router;

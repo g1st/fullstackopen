@@ -1,7 +1,18 @@
-GET http://localhost:3002/api/diagnoses HTTP/1.1
+GET http://localhost:3001/api/diagnoses HTTP/1.1
 
 ###
 
-GET http://localhost:3002/api/patients HTTP/1.1
+GET http://localhost:3001/api/patients HTTP/1.1
 
 ###
+
+POST http://localhost:3001/api/patients HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Jon",
+  "dateOfBirth": "2020-04-15",
+  "gender": "other",
+  "ssn": "123-abc-321",
+  "occupation": "Jeweller"
+}
