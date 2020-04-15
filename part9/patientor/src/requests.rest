@@ -1,3 +1,7 @@
 GET http://localhost:3002/api/diagnoses HTTP/1.1
 
 ###
+
+GET http://localhost:3002/api/patients HTTP/1.1
+
+###
