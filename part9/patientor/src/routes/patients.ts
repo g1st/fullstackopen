@@ -8,6 +8,16 @@ router.get('/', (_req, res) => {
   res.json(patientsService.getPublicPatients());
 });
 
+router.get('/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const [patient] = patientsService.getPatient(id);
+    res.json(patient);
+  } catch (e) {
+    res.status(404).json({ error: e.message });
+  }
+});
+
 router.post('/', (req, res) => {
   try {
     const parsedNewPatient = toNewPatient(req.body);

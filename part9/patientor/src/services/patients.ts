@@ -20,6 +20,9 @@ const getPublicPatients = (): Array<PublicPatient> => {
   return publicPatients;
 };
 
+const getPatient = (id: string): Patient[] =>
+  patientsData.filter((patient) => patient.id === id);
+
 const addPatient = (entry: NewPatient): Patient => {
   const newPatient = {
     id: uuidv4(),
@@ -34,4 +37,5 @@ export default {
   getPatients,
   getPublicPatients,
   addPatient,
+  getPatient,
 };

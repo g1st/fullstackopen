@@ -16,3 +16,7 @@ content-type: application/json
   "ssn": "123-abc-321",
   "occupation": "Jeweller"
 }
+
+###
+
+GET http://localhost:3001/api/patients/d27736ec-f723-11e9-8f0b-362b9e1556672 HTTP/1.1
