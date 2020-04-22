@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Gender } from '../types';
-import { isString, isDate, isGender } from './typeGuards';
+import { Gender, Entry } from '../types';
+import { isString, isDate, isGender, typeIsCorrect } from './typeGuards';
 
 export const parseName = (name: any): string => {
   if (!name || !isString(name)) {
@@ -40,4 +40,13 @@ export const parseGender = (gender: any): Gender => {
   }
 
   return gender;
+};
+
+export const parseEntries = (entries: any): Entry[] => {
+  entries.forEach((entry: Entry) => {
+    if (!typeIsCorrect(entry.type)) {
+      throw new Error(`Incorrect entry type: ${entry.type}`);
+    }
+  });
+  return entries;
 };
