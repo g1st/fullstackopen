@@ -1,5 +1,5 @@
 import { Action } from './reducer';
-import { Patient } from '../types';
+import { Patient, Diagnosis } from '../types';
 
 export const setPatientList = (patientListFromApi: Patient[]): Action => ({
   type: 'SET_PATIENT_LIST',
@@ -14,4 +14,11 @@ export const updatePatient = (patientInfo: Patient): Action => ({
 export const addPatient = (patient: Patient): Action => ({
   type: 'ADD_PATIENT',
   payload: patient,
+});
+
+export const setDiagnosesList = (
+  diagnosesListFromApi: Diagnosis[]
+): Action => ({
+  type: 'SET_DIAGNOSES_LIST',
+  payload: diagnosesListFromApi,
 });

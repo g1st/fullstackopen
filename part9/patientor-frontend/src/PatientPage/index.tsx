@@ -4,12 +4,20 @@ import axios from 'axios';
 import { Icon } from 'semantic-ui-react';
 
 import { useStateValue, updatePatient } from '../state';
-import { Patient } from '../types';
+import { Patient, Diagnosis } from '../types';
 import { apiBaseUrl } from '../constants';
+
+const getDiagnosisName = (
+  diagnoses: Diagnosis[],
+  code: Diagnosis['code']
+): Diagnosis['name'] => {
+  const [diagnosis] = diagnoses.filter((obj) => obj.code === code);
+  return diagnosis.name;
+};
 
 const PatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -66,7 +74,9 @@ const PatientPage: React.FC = () => {
                 </p>
                 <ul>
                   {entry.diagnosisCodes?.map((code) => (
-                    <li key={code}>{code}</li>
+                    <li key={code}>
+                      {code} {getDiagnosisName(diagnoses, code)}
+                    </li>
                   ))}
                 </ul>
               </div>
