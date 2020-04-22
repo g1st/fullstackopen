@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Icon } from 'semantic-ui-react';
 
-import { useStateValue } from '../state';
+import { useStateValue, updatePatient } from '../state';
 import { Patient } from '../types';
 import { apiBaseUrl } from '../constants';
 
@@ -19,7 +19,7 @@ const PatientPage: React.FC = () => {
         const { data: patientInfo } = await axios.get<Patient>(
           `${apiBaseUrl}/patients/${id}`
         );
-        dispatch({ type: 'UPDATE_PATIENT', payload: patientInfo });
+        dispatch(updatePatient(patientInfo));
         setLoading(false);
       } catch (e) {
         console.error(e.message);
@@ -28,8 +28,8 @@ const PatientPage: React.FC = () => {
     };
     if (
       id &&
-      patients.hasOwnProperty(id) &&
-      !patients[id].hasOwnProperty('ssn')
+      Object.prototype.hasOwnProperty.call(patients, id) &&
+      !Object.prototype.hasOwnProperty.call(patients[id], 'ssn')
     ) {
       fetchPatient();
     }
@@ -41,7 +41,7 @@ const PatientPage: React.FC = () => {
         <div>loading...</div>
       ) : (
         id &&
-        patients.hasOwnProperty(id) && (
+        Object.prototype.hasOwnProperty.call(patients, id) && (
           <>
             <h2>
               {patients[id].name}{' '}
