@@ -3,21 +3,14 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Icon } from 'semantic-ui-react';
 
+import EntryDetails from '../components/EntryDetails';
 import { useStateValue, updatePatient } from '../state';
-import { Patient, Diagnosis } from '../types';
+import { Patient } from '../types';
 import { apiBaseUrl } from '../constants';
-
-const getDiagnosisName = (
-  diagnoses: Diagnosis[],
-  code: Diagnosis['code']
-): Diagnosis['name'] => {
-  const [diagnosis] = diagnoses.filter((obj) => obj.code === code);
-  return diagnosis.name;
-};
 
 const PatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patients, diagnoses }, dispatch] = useStateValue();
+  const [{ patients }, dispatch] = useStateValue();
   const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -68,18 +61,7 @@ const PatientPage: React.FC = () => {
             <p>occupation: {patients[id].occupation}</p>
             <h3>entries</h3>
             {patients[id].entries.map((entry) => (
-              <div key={entry.id}>
-                <p>
-                  {entry.date} {entry.description}
-                </p>
-                <ul>
-                  {entry.diagnosisCodes?.map((code) => (
-                    <li key={code}>
-                      {code} {getDiagnosisName(diagnoses, code)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <EntryDetails key={entry.id} entry={entry} />
             ))}
           </>
         )
