@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Gender, Entry } from '../types';
-import { isString, isDate, isGender, typeIsCorrect } from './typeGuards';
+import { Gender, EntryTypes, HealthCheckRating, SickLeave } from '../types';
+import {
+  isString,
+  isDate,
+  isGender,
+  typeIsCorrect,
+  isHealthCheckRatingCorrect,
+} from './typeGuards';
 
 export const parseName = (name: any): string => {
   if (!name || !isString(name)) {
@@ -26,7 +32,7 @@ export const parseOccupation = (occupation: any): string => {
   return occupation;
 };
 
-export const parseDateOfBirth = (date: any): string => {
+export const parseDate = (date: any): string => {
   if (!date || !isString(date) || !isDate(date)) {
     throw new Error(`Incorrect or missing date: ${date}`);
   }
@@ -42,11 +48,60 @@ export const parseGender = (gender: any): Gender => {
   return gender;
 };
 
-export const parseEntries = (entries: any): Entry[] => {
-  entries.forEach((entry: Entry) => {
-    if (!typeIsCorrect(entry.type)) {
-      throw new Error(`Incorrect entry type: ${entry.type}`);
+export const parseEntryType = (type: any): EntryTypes => {
+  if (!type || !typeIsCorrect(type)) {
+    throw new Error(`Incorrect or missing entry's type: ${type}`);
+  }
+
+  return type;
+};
+
+export const parseDescription = (description: any): string => {
+  if (!description || !isString(description)) {
+    throw new Error(`Incorrect or missing description: ${description}`);
+  }
+
+  return description;
+};
+
+export const parseSpecialist = (specialist: any): string => {
+  if (!specialist || !isString(specialist)) {
+    throw new Error(`Incorrect or missing specialist: ${specialist}`);
+  }
+
+  return specialist;
+};
+
+export const parseDiagnosisCodes = (codes: any): string[] => {
+  if (!Array.isArray(codes)) {
+    throw new Error(`Codes aren't an array: ${codes}`);
+  }
+  codes.map((code) => {
+    if (!code || !isString(code)) {
+      throw new Error(
+        `Incorrect or missing code: ${code} in the codes array: ${codes}`
+      );
     }
   });
-  return entries;
+
+  return codes;
+};
+
+export const parseHealthCheckRating = (rating: any): HealthCheckRating => {
+  if (Number.isNaN(rating) || !isHealthCheckRatingCorrect(rating)) {
+    throw new Error(`Incorrect or missing rating: ${rating}`);
+  }
+
+  return rating;
+};
+
+export const parseSickLeave = (dates: any): SickLeave => {
+  if (typeof dates !== 'object' || typeof dates === null) {
+    throw new Error(`Dates aren't an object: ${dates}`);
+  }
+
+  parseDate(dates.startDate);
+  parseDate(dates.endDate);
+
+  return dates;
 };
