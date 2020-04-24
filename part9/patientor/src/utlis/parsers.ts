@@ -96,7 +96,7 @@ export const parseHealthCheckRating = (rating: any): HealthCheckRating => {
 };
 
 export const parseSickLeave = (dates: any): SickLeave => {
-  if (typeof dates !== 'object' || typeof dates === null) {
+  if (typeof dates !== 'object' || dates === null) {
     throw new Error(`Dates aren't an object: ${dates}`);
   }
 
