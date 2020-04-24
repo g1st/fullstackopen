@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Gender, EntryTypes, HealthCheckRating, SickLeave } from '../types';
+import {
+  Gender,
+  EntryTypes,
+  HealthCheckRating,
+  SickLeave,
+  Discharge,
+} from '../types';
 import {
   isString,
   isDate,
@@ -104,4 +110,15 @@ export const parseSickLeave = (dates: any): SickLeave => {
   parseDate(dates.endDate);
 
   return dates;
+};
+
+export const parseDischarge = (criteria: any): Discharge => {
+  if (typeof criteria !== 'object' || criteria === null) {
+    throw new Error(`Criteria aren't an object: ${criteria}`);
+  }
+
+  parseDate(criteria.date);
+  parseName(criteria.criteria);
+
+  return criteria;
 };

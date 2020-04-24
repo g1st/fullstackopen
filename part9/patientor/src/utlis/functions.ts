@@ -19,6 +19,7 @@ import {
   parseHealthCheckRating,
   parseEntryType,
   parseSickLeave,
+  parseDischarge,
 } from './parsers';
 
 export const toNewPatient = (object: any): NewPatient => {
@@ -52,7 +53,7 @@ export const toNewEntry = (object: any): NewEntry => {
         description: parseDescription(object.description),
         date: parseDate(object.date),
         specialist: parseSpecialist(object.specialist),
-        discharge: object.discharge,
+        discharge: parseDischarge(object.discharge),
         diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes),
       };
       return hospitalEntry;
