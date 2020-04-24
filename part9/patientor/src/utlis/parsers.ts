@@ -112,13 +112,13 @@ export const parseSickLeave = (dates: any): SickLeave => {
   return dates;
 };
 
-export const parseDischarge = (criteria: any): Discharge => {
-  if (typeof criteria !== 'object' || criteria === null) {
-    throw new Error(`Criteria aren't an object: ${criteria}`);
+export const parseDischarge = (discharge: any): Discharge => {
+  if (typeof discharge !== 'object' || discharge === null) {
+    throw new Error(`Discharge aren't an object: ${discharge}`);
   }
 
-  parseDate(criteria.date);
-  parseName(criteria.criteria);
+  parseDate(discharge.date);
+  parseName(discharge.criteria);
 
-  return criteria;
+  return discharge;
 };

@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
   }
 });
 
-router.get('/:id/entries', (req, res) => {
+router.post('/:id/entries', (req, res) => {
   try {
     const { id } = req.params;
     const parsedNewEntry = toNewEntry(req.body);
