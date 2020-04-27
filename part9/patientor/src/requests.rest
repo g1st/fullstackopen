@@ -36,7 +36,7 @@ Content-Type: application/json
   "description": "Healing time appr. 2 weeks. patient doesn't remember how he got the injury.",
   "employerName": "HMRC",
   "sickLeave": {
-    "startDate": "1111-11-11",
-    "endDate": "2222-11-11"
+    "startDate": "2020-02-11",
+    "endDate": "2020-02-24"
   }
 }
