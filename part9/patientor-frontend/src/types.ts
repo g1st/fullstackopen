@@ -62,6 +62,11 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HospitalEntry;
 
+export type EntryNoId =
+  | Omit<HealthCheckEntry, 'id'>
+  | Omit<OccupationalHealthcareEntry, 'id'>
+  | Omit<HospitalEntry, 'id'>;
+
 export interface Patient {
   id: string;
   name: string;

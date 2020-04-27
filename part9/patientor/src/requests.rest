@@ -19,7 +19,7 @@ content-type: application/json
 
 ###
 
-GET http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667 HTTP/1.1
+GET http://localhost:3001/api/patients/d2773598-f723-11e9-8f0b-362b9e155667 HTTP/1.1
 
 ###
 
@@ -28,14 +28,15 @@ Content-Type: application/json
 
 {
   "date": "2015-01-02",
-  "type": "Hospital",
+  "type": "OccupationalHealthcare",
   "specialist": "MD House",
   "diagnosisCodes": [
     "S62.5"
   ],
   "description": "Healing time appr. 2 weeks. patient doesn't remember how he got the injury.",
-  "discharge": {
-    "date": "2015-01-16",
-    "criteria": "Thumb has healed."
+  "employerName": "HMRC",
+  "sickLeave": {
+    "startDate": "1111-11-11",
+    "endDate": "2222-11-11"
   }
 }

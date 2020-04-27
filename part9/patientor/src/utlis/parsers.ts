@@ -106,6 +106,9 @@ export const parseSickLeave = (dates: any): SickLeave => {
     throw new Error(`Dates aren't an object: ${dates}`);
   }
 
+  if (dates.startDate === '' && dates.endDate === '') {
+    return dates;
+  }
   parseDate(dates.startDate);
   parseDate(dates.endDate);
 
